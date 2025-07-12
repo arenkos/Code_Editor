@@ -1,0 +1,394 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2d2d30;
+  border-bottom: 1px solid #3e3e42;
+  min-height: 50px;
+}
+
+.menu {
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.menu-button {
+  background-color: #007acc;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.menu-button:hover {
+  background-color: #005a9e;
+}
+
+.menu-button:active {
+  background-color: #004578;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #2d2d30;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 250px;
+  z-index: 1000;
+  margin-top: 5px;
+}
+
+.dropdown-section {
+  padding: 10px;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.dropdown-section:last-child {
+  border-bottom: none;
+}
+
+.dropdown-section h4 {
+  margin: 0 0 8px 0;
+  color: #cccccc;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #ffffff;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #3e3e42;
+}
+
+.dropdown-item:active {
+  background-color: #007acc;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-name-input {
+  background-color: #3c3c3c;
+  border: 1px solid #5a5a5a;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.file-name-input:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+.language-badge {
+  background-color: #007acc;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+/* Monaco Editor özelleştirmeleri */
+.monaco-editor {
+  padding-top: 10px;
+}
+
+/* Terminal Stilleri */
+.terminal-container {
+  height: 40%;
+  background-color: #1e1e1e;
+  border-top: 1px solid #3e3e42;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  background-color: #2d2d30;
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3e3e42;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.terminal-clear-btn {
+  background: none;
+  border: none;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.terminal-clear-btn:hover {
+  background-color: #3e3e42;
+}
+
+.terminal-output {
+  flex: 1;
+  padding: 10px 15px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #cccccc;
+  background-color: #1e1e1e;
+}
+
+.terminal-output pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.terminal-input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #2d2d30;
+  border-top: 1px solid #3e3e42;
+}
+
+.terminal-prompt {
+  color: #007acc;
+  font-weight: bold;
+  margin-right: 10px;
+  font-family: 'Courier New', monospace;
+}
+
+.terminal-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  outline: none;
+}
+
+.terminal-input::placeholder {
+  color: #666666;
+}
+
+/* Active button style */
+.menu-button.active {
+  background-color: #005a9e;
+}
+
+/* Dosya Gezgini Stilleri */
+.file-explorer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.file-explorer-modal {
+  background-color: #2d2d30;
+  border: 1px solid #3e3e42;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.file-explorer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #3e3e42;
+  background-color: #1e1e1e;
+  border-radius: 8px 8px 0 0;
+}
+
+.file-explorer-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.file-explorer-close {
+  background: none;
+  border: none;
+  color: #cccccc;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.file-explorer-close:hover {
+  background-color: #3e3e42;
+}
+
+.file-explorer-path {
+  padding: 10px 20px;
+  background-color: #252526;
+  border-bottom: 1px solid #3e3e42;
+  color: #cccccc;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+}
+
+.file-explorer-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-explorer-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #cccccc;
+  font-size: 14px;
+}
+
+.file-explorer-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.file-explorer-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: #ffffff;
+}
+
+.file-explorer-item:hover {
+  background-color: #3e3e42;
+}
+
+.file-explorer-item.folder {
+  color: #4ec9b0;
+}
+
+.file-explorer-item.file {
+  color: #dcdcdc;
+}
+
+.file-icon {
+  margin-right: 10px;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.file-name {
+  font-size: 14px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive tasarım */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .menu {
+    order: 1;
+  }
+  
+  .file-info {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .file-name-input {
+    min-width: 150px;
+  }
+  
+  .terminal-container {
+    height: 50%;
+  }
+  
+  .file-explorer-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+} 
