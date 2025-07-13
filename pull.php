@@ -51,4 +51,5 @@ $pm2Restart = shell_exec("pm2 restart code-editor 2>&1");
 logMsg("pm2 restart: $pm2Restart");
 
 echo "OK";
+
 ?>
