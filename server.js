@@ -251,7 +251,7 @@ app.post('/api/terminal', (req, res) => {
     // Oturum kontrolü - yoksa oluştur
     if (!terminalSessions.has(sessionId)) {
       terminalSessions.set(sessionId, {
-        cwd: '/root/code-editor',
+        cwd: '/var/www/code-editor', // Bu satırı değiştirin
         history: []
       });
     }
