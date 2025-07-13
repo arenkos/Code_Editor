@@ -1,55 +1,69 @@
 <?php
-// Webhook payload'ı al
-$payload = file_get_contents('php://input');
-$data = json_decode($payload, true);
+$logFile = __DIR__ . '/webhook.log';
+$gitLogFile = __DIR__ . '/git.log';
 
-// (Opsiyonel) Secret key ile doğrulama
-// $secret = 'BURAYA_SECRET_YAZ';
-// $signature = $_SERVER['HTTP_X_HUB_SIGNATURE_256'] ?? '';
-// $expected = 'sha256=' . hash_hmac('sha256', $payload, $secret);
-// if ($signature !== $expected) {
-//     file_put_contents("/var/www/html/hook.log", date("Y-m-d H:i:s") . " - Secret doğrulama hatası\n", FILE_APPEND);
-//     http_response_code(401);
-//     exit("Unauthorized");
-// }
+// Webhook verilerini al
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
-// Log dosyası
-$logFile = "/var/www/html/hook.log";
-function logMsg($msg) {
-    global $logFile;
-    file_put_contents($logFile, date("Y-m-d H:i:s") . " - $msg\n", FILE_APPEND);
+// Log başlangıcı
+$logEntry = date('Y-m-d H:i:s') . " - Webhook tetiklendi\n";
+file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+// Sadece push eventlerini işle
+if (isset($data['ref']) && strpos($data['ref'], 'refs/heads/') === 0) {
+    $branch = str_replace('refs/heads/', '', $data['ref']);
+    $repoPath = '/var/www/code-editor'; // DÜZELTİLDİ
+
+    $logEntry = date('Y-m-d H:i:s') . " - Branch: " . $branch . "\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+    // Git durumunu kontrol et
+    $gitStatus = shell_exec("cd $repoPath && git status 2>&1");
+    $logEntry = date('Y-m-d H:i:s') . " - Git Status: " . $gitStatus . "\n";
+    file_put_contents($gitLogFile, $logEntry, FILE_APPEND);
+
+    // Git pull yap
+    $gitPull = shell_exec("cd $repoPath && git pull origin $branch 2>&1");
+    $logEntry = date('Y-m-d H:i:s') . " - Git Pull Output: " . $gitPull . "\n";
+    file_put_contents($gitLogFile, $logEntry, FILE_APPEND);
+
+    // NPM install
+    $npmInstall = shell_exec("cd $repoPath && npm install 2>&1");
+    $logEntry = date('Y-m-d H:i:s') . " - NPM Install: " . $npmInstall . "\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+    // Build
+    $npmBuild = shell_exec("cd $repoPath && npm run build 2>&1");
+    $logEntry = date('Y-m-d H:i:s') . " - NPM Build: " . $npmBuild . "\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+    // PM2 restart (tam yol ve HOME ile)
+    $pm2Restart = shell_exec("HOME=/root /usr/local/bin/pm2 restart code-editor 2>&1");
+    $logEntry = date('Y-m-d H:i:s') . " - PM2 Restart: " . $pm2Restart . "\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+    $response = [
+        'status' => 'success',
+        'message' => 'Webhook processed successfully',
+        'branch' => $branch,
+        'git_output' => $gitPull
+    ];
+
+    $logEntry = date('Y-m-d H:i:s') . " - Success: Branch $branch updated\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+} else {
+    $response = [
+        'status' => 'ignored',
+        'message' => 'Not a push event or invalid ref'
+    ];
+
+    $logEntry = date('Y-m-d H:i:s') . " - Ignored: Not a push event\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
 }
 
-logMsg("Push geldi");
-
-// Komutları çalıştır
-$repoPath = "/var/www/code-editor";
-if (!is_dir($repoPath)) {
-    logMsg("Repository bulunamadı: $repoPath");
-    http_response_code(500);
-    exit("Repository not found");
-}
-
-chdir($repoPath);
-
-// Git pull
-$gitPull = shell_exec("git pull 2>&1");
-logMsg("git pull: $gitPull");
-
-// NPM install (isteğe bağlı, package.json değiştiyse)
-if (file_exists("package.json")) {
-    $npmInstall = shell_exec("npm install 2>&1");
-    logMsg("npm install: $npmInstall");
-}
-
-// React build
-$npmBuild = shell_exec("npm run build 2>&1");
-logMsg("npm run build: $npmBuild");
-
-// PM2 restart
-$pm2Restart = shell_exec("pm2 restart code-editor 2>&1");
-logMsg("pm2 restart: $pm2Restart");
-
-echo "OK";
-
+// JSON response
+header('Content-Type: application/json');
+echo json_encode($response, JSON_PRETTY_PRINT);
 ?>
