@@ -19,6 +19,7 @@ function App() {
   const terminalRef = useRef(null);
   const fileExplorerRef = useRef(null);
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle', 'saving', 'saved', 'error'
+  const [lastAutoSave, setLastAutoSave] = useState(null); // Son otomatik kaydetme zamanı
   const saveTimeout = useRef(null);
 
   // Dropdown dışına tıklandığında kapat
@@ -599,6 +600,7 @@ h1 {
       });
       if (!response.ok) throw new Error('Kaydetme hatası');
       setSaveStatus('saved');
+      setLastAutoSave(new Date()); // Kaydetme zamanını kaydet
       setTimeout(() => setSaveStatus('idle'), 1000);
     } catch (e) {
       console.error('Otomatik kaydetme hatası:', e);
@@ -663,9 +665,7 @@ h1 {
             )}
           </div>
           <button onClick={handleSaveFile} className="menu-button">
-            {saveStatus === 'saving' ? '💾 Kaydediliyor...' : 
-             saveStatus === 'saved' ? '✅ Kaydedildi' : 
-             saveStatus === 'error' ? '❌ Kaydedilemedi' : 'Kaydet'}
+            Kaydet
           </button>
           <button 
             onClick={() => setShowTerminal(!showTerminal)} 
@@ -683,6 +683,12 @@ h1 {
             placeholder="Dosya adı"
           />
           <span className="language-badge">{language}</span>
+          {/* Otomatik kaydetme durumu */}
+          {lastAutoSave && (
+            <span className="auto-save-status">
+              ✅ Otomatik kaydedildi: {lastAutoSave.toLocaleTimeString('tr-TR')}
+            </span>
+          )}
         </div>
         <input
           type="file"
