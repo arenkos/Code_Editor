@@ -22,6 +22,7 @@ function App() {
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle', 'saving', 'saved', 'error'
   const [lastAutoSave, setLastAutoSave] = useState(null); // Son otomatik kaydetme zamanı
   const saveTimeout = useRef(null);
+  const terminalEndRef = useRef(null);
 
   // Dropdown dışına tıklandığında kapat
   useEffect(() => {
@@ -631,6 +632,13 @@ Güvenlik: Tehlikeli komutlar (rm -rf, sudo, vb.) engellenmiştir.`;
     return () => clearTimeout(saveTimeout.current);
   }, [code, fileName]);
 
+  // Terminal çıktısı değişince otomatik scroll
+  useEffect(() => {
+    if (terminalEndRef.current) {
+      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [terminalOutput, showTerminal]);
+
   return (
     <div className="app">
       <div className="toolbar">
@@ -757,6 +765,7 @@ Güvenlik: Tehlikeli komutlar (rm -rf, sudo, vb.) engellenmiştir.`;
             </div>
             <div className="terminal-output" ref={terminalRef}>
               <pre>{terminalOutput || 'Terminal hazır. "help" yazarak komutları görebilirsiniz.\n'}</pre>
+              <div ref={terminalEndRef} />
             </div>
             <form onSubmit={handleTerminalSubmit} className="terminal-input-container">
               <span className="terminal-prompt">$</span>
