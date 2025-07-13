@@ -90,7 +90,7 @@ function App() {
   const handleOpenFileExplorer = () => {
     setShowFileExplorer(true);
     setShowOpenMenu(false);
-    loadFileExplorerFiles('/');
+    loadFileExplorerFiles('/root/code-editor');
   };
 
   // Dosya gezgini dosyalarını yükle
@@ -446,7 +446,7 @@ h1 {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            path: `/${fileName}`,
+            path: `/root/code-editor/${fileName}`,
             content: code
           })
         });
@@ -593,7 +593,7 @@ h1 {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          path: `/${newFileName}`,
+          path: `/root/code-editor/${newFileName}`,
           content: newCode
         })
       });
@@ -601,6 +601,7 @@ h1 {
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 1000);
     } catch (e) {
+      console.error('Otomatik kaydetme hatası:', e);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 2000);
     }
@@ -662,7 +663,9 @@ h1 {
             )}
           </div>
           <button onClick={handleSaveFile} className="menu-button">
-            Kaydet
+            {saveStatus === 'saving' ? '💾 Kaydediliyor...' : 
+             saveStatus === 'saved' ? '✅ Kaydedildi' : 
+             saveStatus === 'error' ? '❌ Kaydedilemedi' : 'Kaydet'}
           </button>
           <button 
             onClick={() => setShowTerminal(!showTerminal)} 
