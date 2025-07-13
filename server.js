@@ -6,6 +6,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Terminal oturumları için basit bir store
+const terminalSessions = new Map();
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -222,7 +225,7 @@ app.post('/api/save-file', (req, res) => {
 // Terminal komutları endpoint'i
 app.post('/api/terminal', (req, res) => {
   try {
-    const { command } = req.body;
+    const { command, sessionId = 'default' } = req.body;
     
     if (!command) {
       return res.status(400).json({ error: 'Komut belirtilmedi' });
@@ -245,20 +248,50 @@ app.post('/api/terminal', (req, res) => {
       });
     }
     
+    // Oturum kontrolü - yoksa oluştur
+    if (!terminalSessions.has(sessionId)) {
+      terminalSessions.set(sessionId, {
+        cwd: '/root/code-editor',
+        history: []
+      });
+    }
+    
+    const session = terminalSessions.get(sessionId);
+    
     // Komutu çalıştır
     const { exec } = require('child_process');
-    exec(command, { cwd: '/root/code-editor' }, (error, stdout, stderr) => {
+    exec(command, { cwd: session.cwd }, (error, stdout, stderr) => {
       if (error) {
         res.json({
           success: false,
           output: stderr || error.message,
-          error: true
+          error: true,
+          cwd: session.cwd
         });
       } else {
+        // cd komutu için çalışma dizinini güncelle
+        if (command.trim().startsWith('cd ')) {
+          const newPath = command.trim().substring(3).trim();
+          if (newPath === '..') {
+            session.cwd = path.dirname(session.cwd);
+          } else if (newPath.startsWith('/')) {
+            session.cwd = newPath;
+          } else {
+            session.cwd = path.resolve(session.cwd, newPath);
+          }
+        }
+        
+        // Komut geçmişine ekle
+        session.history.push(command);
+        if (session.history.length > 100) {
+          session.history.shift();
+        }
+        
         res.json({
           success: true,
           output: stdout,
-          error: false
+          error: false,
+          cwd: session.cwd
         });
       }
     });
@@ -267,6 +300,27 @@ app.post('/api/terminal', (req, res) => {
     console.error('Terminal komut hatası:', error);
     res.status(500).json({ 
       error: 'Komut çalıştırılamadı',
+      message: error.message 
+    });
+  }
+});
+
+// Terminal oturumu sıfırlama endpoint'i
+app.post('/api/terminal/reset', (req, res) => {
+  try {
+    const { sessionId = 'default' } = req.body;
+    
+    terminalSessions.delete(sessionId);
+    
+    res.json({
+      success: true,
+      message: 'Terminal oturumu sıfırlandı'
+    });
+    
+  } catch (error) {
+    console.error('Terminal sıfırlama hatası:', error);
+    res.status(500).json({ 
+      error: 'Oturum sıfırlanamadı',
       message: error.message 
     });
   }

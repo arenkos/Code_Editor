@@ -11,6 +11,7 @@ function App() {
   const [showTerminal, setShowTerminal] = useState(false);
   const [terminalOutput, setTerminalOutput] = useState('');
   const [terminalInput, setTerminalInput] = useState('');
+  const [terminalSessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const [fileExplorerPath, setFileExplorerPath] = useState('/');
   const [fileExplorerFiles, setFileExplorerFiles] = useState([]);
   const [fileExplorerLoading, setFileExplorerLoading] = useState(false);
@@ -469,6 +470,7 @@ h1 {
       const output = `Kullanılabilir komutlar:
 - clear/cls: Terminali temizle
 - help: Bu yardımı göster
+- reset: Terminal oturumunu sıfırla
 - ls: Dosya listesi
 - pwd: Mevcut dizin
 - cd [dizin]: Dizin değiştir
@@ -484,6 +486,25 @@ Güvenlik: Tehlikeli komutlar (rm -rf, sudo, vb.) engellenmiştir.`;
       return;
     }
 
+    if (cmd === 'reset') {
+      try {
+        const response = await fetch('/api/terminal/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: terminalSessionId })
+        });
+        
+        if (response.ok) {
+          setTerminalOutput(prev => prev + `$ ${command}\nTerminal oturumu sıfırlandı.\n\n`);
+        } else {
+          setTerminalOutput(prev => prev + `$ ${command}\nOturum sıfırlama hatası.\n\n`);
+        }
+      } catch (error) {
+        setTerminalOutput(prev => prev + `$ ${command}\nHata: ${error.message}\n\n`);
+      }
+      return;
+    }
+
     // Gerçek komutları sunucuya gönder
     try {
       setTerminalOutput(prev => prev + `$ ${command}\n`);
@@ -491,7 +512,10 @@ Güvenlik: Tehlikeli komutlar (rm -rf, sudo, vb.) engellenmiştir.`;
       const response = await fetch('/api/terminal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command: cmd })
+        body: JSON.stringify({ 
+          command: cmd,
+          sessionId: terminalSessionId
+        })
       });
       
       if (!response.ok) {
