@@ -27,14 +27,7 @@ app.get('/api/files', (req, res) => {
     const fullPath = path.resolve(requestedPath);
     
     // Güvenlik kontrolü - sadece belirli dizinlere erişim
-    const allowedPaths = [
-      '/home',
-      '/var/www',
-      '/tmp',
-      '/usr/local',
-      '/root',
-      process.cwd()
-    ];
+    const allowedPaths = ["/"];
     
     const isAllowed = allowedPaths.some(allowedPath => 
       fullPath.startsWith(path.resolve(allowedPath))
@@ -63,16 +56,21 @@ app.get('/api/files', (req, res) => {
     }
     
     const files = fs.readdirSync(fullPath);
-    const fileList = files.map(file => {
-      const filePath = path.join(fullPath, file);
-      const fileStats = fs.statSync(filePath);
-      return {
-        name: file,
-        type: fileStats.isDirectory() ? 'folder' : 'file',
-        path: path.join(requestedPath, file).replace(/\\/g, '/'),
-        size: fileStats.isFile() ? fileStats.size : null,
-        modified: fileStats.mtime
-      };
+    const fileList = [];
+    files.forEach(file => {
+      try {
+        const filePath = path.join(fullPath, file);
+        const fileStats = fs.statSync(filePath);
+        fileList.push({
+          name: file,
+          type: fileStats.isDirectory() ? 'folder' : 'file',
+          path: path.join(requestedPath, file).replace(/\\/g, '/'),
+          size: fileStats.isFile() ? fileStats.size : null,
+          modified: fileStats.mtime
+        });
+      } catch (e) {
+        // Hatalı dosya atlanır
+      }
     });
     
     // Klasörleri önce, dosyaları sonra sırala
@@ -107,14 +105,7 @@ app.get('/api/file-content', (req, res) => {
     const fullPath = path.resolve(filePath);
     
     // Güvenlik kontrolü
-    const allowedPaths = [
-      '/home',
-      '/var/www',
-      '/tmp',
-      '/usr/local',
-      '/root',
-      process.cwd()
-    ];
+    const allowedPaths = ["/"];
     
     const isAllowed = allowedPaths.some(allowedPath => 
       fullPath.startsWith(path.resolve(allowedPath))
@@ -179,14 +170,7 @@ app.post('/api/save-file', (req, res) => {
     const fullPath = path.resolve(filePath);
     
     // Güvenlik kontrolü
-    const allowedPaths = [
-      '/home',
-      '/var/www',
-      '/tmp',
-      '/usr/local',
-      '/root',
-      process.cwd()
-    ];
+    const allowedPaths = ["/"];
     
     const isAllowed = allowedPaths.some(allowedPath => 
       fullPath.startsWith(path.resolve(allowedPath))
@@ -251,7 +235,7 @@ app.post('/api/terminal', (req, res) => {
     // Oturum kontrolü - yoksa oluştur
     if (!terminalSessions.has(sessionId)) {
       terminalSessions.set(sessionId, {
-        cwd: '/var/www/code-editor', // Bu satırı değiştirin
+        cwd: '/var/www/code-editor',
         history: []
       });
     }
@@ -260,7 +244,7 @@ app.post('/api/terminal', (req, res) => {
     
     // Komutu çalıştır
     const { exec } = require('child_process');
-    exec(command, { cwd: session.cwd, shell: '/bin/sh' }, (error, stdout, stderr) => {
+    exec(command, { cwd: session.cwd, shell: "/bin/sh" }, (error, stdout, stderr) => {
       if (error) {
         res.json({
           success: false,

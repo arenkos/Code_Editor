@@ -175,6 +175,7 @@
   border-top: 1px solid #3e3e42;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .terminal-header {
@@ -204,7 +205,7 @@
 }
 
 .terminal-output {
-  height: 200px; /* veya tasarımına göre daha büyük/küçük */
+  flex: 1;
   overflow-y: auto;
   background: #181818;
   color: #e0e0e0;
@@ -213,6 +214,7 @@
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 0;
+  min-height: 0;
 }
 
 .terminal-output pre {
