@@ -204,14 +204,15 @@
 }
 
 .terminal-output {
-  flex: 1;
-  padding: 10px 15px;
+  height: 200px; /* veya tasarımına göre daha büyük/küçük */
   overflow-y: auto;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #cccccc;
-  background-color: #1e1e1e;
+  background: #181818;
+  color: #e0e0e0;
+  font-family: monospace;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 0;
 }
 
 .terminal-output pre {
