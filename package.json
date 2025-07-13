@@ -19,7 +19,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server.js",
-    "dev": "npm run build && npm run server"
+    "dev": "npm run build && npm run server",
+    "prod": "NODE_ENV=production node server.js"
   },
   "eslintConfig": {
     "extends": [

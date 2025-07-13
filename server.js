@@ -9,7 +9,13 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('build'));
+
+// Production ortamında build klasörünü serve et
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'build')));
+} else {
+  app.use(express.static('build'));
+}
 
 // Dosya listesi endpoint'i
 app.get('/api/files', (req, res) => {
