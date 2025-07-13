@@ -74,4 +74,5 @@ echo json_encode([
 ]);
 
 writeLog("Deployment tamamlandı");
+
 ?>
