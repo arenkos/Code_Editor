@@ -437,42 +437,21 @@ h1 {
   ];
 
   // Dosya kaydet
-  const handleSaveFile = async () => {
+  const handleDownloadFile = () => {
     try {
-      // Eğer dosya yolu varsa sunucuya kaydet, yoksa indir
-      if (fileName && fileName !== 'untitled.js') {
-        const response = await fetch('/api/save-file', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            path: `/root/code-editor/${fileName}`,
-            content: code
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const result = await response.json();
-        alert('Dosya başarıyla kaydedildi!');
-      } else {
-        // Yerel indirme
-        const blob = new Blob([code], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
+      // Dosyayı bilgisayara indir
+      const blob = new Blob([code], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Dosya kaydetme hatası:', error);
-      alert('Dosya kaydedilemedi: ' + error.message);
+      console.error('Dosya indirme hatası:', error);
+      alert('Dosya indirilemedi: ' + error.message);
     }
   };
 
@@ -664,8 +643,8 @@ h1 {
               </div>
             )}
           </div>
-          <button onClick={handleSaveFile} className="menu-button">
-            Kaydet
+          <button onClick={handleDownloadFile} className="menu-button">
+            İndir
           </button>
           <button 
             onClick={() => setShowTerminal(!showTerminal)} 
