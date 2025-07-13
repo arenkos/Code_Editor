@@ -456,50 +456,60 @@ h1 {
   };
 
   // Terminal komutlarını işle
-  const handleTerminalCommand = (command) => {
-    const cmd = command.trim().toLowerCase();
-    let output = '';
-
+  const handleTerminalCommand = async (command) => {
+    const cmd = command.trim();
+    
+    // Özel komutlar
     if (cmd === 'clear' || cmd === 'cls') {
       setTerminalOutput('');
       return;
     }
 
     if (cmd === 'help') {
-      output = `Kullanılabilir komutlar:
-- run: Kodu çalıştır
+      const output = `Kullanılabilir komutlar:
 - clear/cls: Terminali temizle
 - help: Bu yardımı göster
 - ls: Dosya listesi
+- pwd: Mevcut dizin
+- cd [dizin]: Dizin değiştir
 - cat [dosya]: Dosya içeriğini göster
-- echo [metin]: Metni yazdır`;
-    } else if (cmd === 'run') {
-      output = runCode();
-    } else if (cmd === 'ls') {
-      output = `Dosyalar:
-- ${fileName} (${language})
-- example.js
-- example.py
-- example.html
-- example.css
-- example.json`;
-    } else if (cmd.startsWith('cat ')) {
-      const fileToShow = cmd.substring(4);
-      if (fileToShow === fileName) {
-        output = code;
-      } else {
-        const sampleFile = sampleFiles.find(f => f.name === fileToShow);
-        output = sampleFile ? sampleFile.content : `Dosya bulunamadı: ${fileToShow}`;
-      }
-    } else if (cmd.startsWith('echo ')) {
-      output = cmd.substring(5);
-    } else if (cmd === '') {
+- echo [metin]: Metni yazdır
+- npm [komut]: NPM komutları
+- git [komut]: Git komutları
+- node [dosya]: Node.js çalıştır
+- python [dosya]: Python çalıştır
+
+Güvenlik: Tehlikeli komutlar (rm -rf, sudo, vb.) engellenmiştir.`;
+      setTerminalOutput(prev => prev + `$ ${command}\n${output}\n\n`);
       return;
-    } else {
-      output = `Komut bulunamadı: ${command}\nYardım için 'help' yazın.`;
     }
 
-    setTerminalOutput(prev => prev + `$ ${command}\n${output}\n\n`);
+    // Gerçek komutları sunucuya gönder
+    try {
+      setTerminalOutput(prev => prev + `$ ${command}\n`);
+      
+      const response = await fetch('/api/terminal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cmd })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        setTerminalOutput(prev => prev + `Hata: ${data.output}\n\n`);
+      } else {
+        setTerminalOutput(prev => prev + `${data.output}\n\n`);
+      }
+      
+    } catch (error) {
+      console.error('Terminal komut hatası:', error);
+      setTerminalOutput(prev => prev + `Hata: ${error.message}\n\n`);
+    }
   };
 
   // Kodu çalıştır

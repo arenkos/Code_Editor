@@ -219,6 +219,59 @@ app.post('/api/save-file', (req, res) => {
   }
 });
 
+// Terminal komutları endpoint'i
+app.post('/api/terminal', (req, res) => {
+  try {
+    const { command } = req.body;
+    
+    if (!command) {
+      return res.status(400).json({ error: 'Komut belirtilmedi' });
+    }
+    
+    // Güvenlik kontrolü - tehlikeli komutları engelle
+    const dangerousCommands = [
+      'rm -rf', 'dd', 'mkfs', 'fdisk', 'shutdown', 'reboot', 'halt',
+      'init', 'killall', 'pkill', 'kill -9', 'sudo', 'su', 'passwd'
+    ];
+    
+    const isDangerous = dangerousCommands.some(dangerous => 
+      command.toLowerCase().includes(dangerous.toLowerCase())
+    );
+    
+    if (isDangerous) {
+      return res.status(403).json({ 
+        error: 'Bu komut güvenlik nedeniyle engellendi',
+        command: command 
+      });
+    }
+    
+    // Komutu çalıştır
+    const { exec } = require('child_process');
+    exec(command, { cwd: '/root/code-editor' }, (error, stdout, stderr) => {
+      if (error) {
+        res.json({
+          success: false,
+          output: stderr || error.message,
+          error: true
+        });
+      } else {
+        res.json({
+          success: true,
+          output: stdout,
+          error: false
+        });
+      }
+    });
+    
+  } catch (error) {
+    console.error('Terminal komut hatası:', error);
+    res.status(500).json({ 
+      error: 'Komut çalıştırılamadı',
+      message: error.message 
+    });
+  }
+});
+
 // React uygulaması için catch-all route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
