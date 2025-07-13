@@ -260,7 +260,7 @@ app.post('/api/terminal', (req, res) => {
     
     // Komutu çalıştır
     const { exec } = require('child_process');
-    exec(command, { cwd: session.cwd }, (error, stdout, stderr) => {
+    exec(command, { cwd: session.cwd, shell: '/bin/sh' }, (error, stdout, stderr) => {
       if (error) {
         res.json({
           success: false,
