@@ -409,3 +409,170 @@ body.sidebar-closed #menu-btn {
   #theme-toggle { right: 16px; }
   #editor-header { padding: 8px 0 8px 0; }
 } 
+#ai-agent-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  background: var(--vscode-editor);
+  color: var(--vscode-header-title);
+  box-shadow: -2px 0 12px rgba(0,0,0,0.08);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--vscode-sidebar-border);
+  transition: right 0.2s;
+}
+#ai-agent-panel.closed {
+  right: -400px;
+  pointer-events: none;
+}
+#ai-agent-header {
+  background: var(--vscode-header);
+  color: var(--vscode-header-title);
+  font-weight: 600;
+  font-size: 1.1em;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--vscode-sidebar-border);
+}
+#ai-agent-header button {
+  background: none;
+  border: none;
+  color: var(--vscode-header-title);
+  font-size: 1.2em;
+  cursor: pointer;
+}
+#ai-agent-messages {
+  flex: 1;
+  padding: 18px 18px 8px 18px;
+  overflow-y: auto;
+  font-size: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-msg-user {
+  align-self: flex-end;
+  background: var(--vscode-accent);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 16px 16px 4px 16px;
+  max-width: 80%;
+  word-break: break-word;
+}
+.ai-msg-agent {
+  align-self: flex-start;
+  background: var(--vscode-terminal-bg);
+  color: var(--vscode-terminal-color);
+  padding: 8px 14px;
+  border-radius: 16px 16px 16px 4px;
+  max-width: 80%;
+  word-break: break-word;
+}
+#ai-agent-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px 18px 18px 18px;
+  border-top: 1px solid var(--vscode-sidebar-border);
+  background: var(--vscode-editor);
+}
+#ai-agent-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--vscode-editor-border);
+  font-size: 1em;
+  background: var(--vscode-editor);
+  color: var(--vscode-header-title);
+}
+#ai-agent-form button {
+  background: var(--vscode-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+#ai-agent-form button:hover {
+  background: var(--vscode-accent-hover);
+}
+#ai-agent-open {
+  position: absolute;
+  top: 60px;
+  right: 18px;
+  z-index: 20;
+  background: var(--vscode-accent);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  font-size: 1em;
+  cursor: pointer;
+}
+#ai-agent-open:hover {
+  background: var(--vscode-accent-hover);
+} 
+/* AI Agent paneli içindeki ayar paneli için modern stil */
+#ai-agent-panel #ai-settings {
+  background: var(--vscode-sideBar-background, #23272e);
+  border-bottom: 1px solid var(--vscode-sideBar-border, #222);
+  padding: 12px 18px 8px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 12px;
+  align-items: center;
+  margin: 0;
+  font-size: 0.98em;
+}
+#ai-agent-panel #ai-settings label {
+  color: var(--vscode-sideBar-foreground, #bbb);
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 0;
+}
+#ai-agent-panel #ai-settings select,
+#ai-agent-panel #ai-settings input[type="password"] {
+  background: var(--vscode-input-background, #181a20);
+  color: var(--vscode-input-foreground, #fff);
+  border: 1px solid var(--vscode-input-border, #333);
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 1em;
+  outline: none;
+  transition: border 0.2s;
+}
+#ai-agent-panel #ai-settings select:focus,
+#ai-agent-panel #ai-settings input[type="password"]:focus {
+  border: 1.5px solid var(--vscode-accent, #0078d4);
+}
+#ai-agent-panel #ai-settings select:hover,
+#ai-agent-panel #ai-settings input[type="password"]:hover {
+  border: 1.5px solid var(--vscode-accent, #0078d4);
+}
+#ai-agent-panel #ai-settings option {
+  color: #222;
+  background: #fff;
+}
+@media (max-width: 600px) {
+  #ai-agent-panel #ai-settings {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 8px 6px 8px;
+  }
+  #ai-agent-panel #ai-settings label {
+    width: 100%;
+  }
+  #ai-agent-panel #ai-settings select,
+  #ai-agent-panel #ai-settings input[type="password"] {
+    width: 100%;
+  }
+} 

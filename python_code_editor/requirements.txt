@@ -1,2 +1,5 @@
 Flask
 flask-cors 
+openai
+anthropic
+google-generativeai 

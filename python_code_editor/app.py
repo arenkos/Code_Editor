@@ -8,6 +8,9 @@ import tempfile
 import shutil
 import requests
 import base64
+import openai
+import anthropic
+import google.generativeai as genai
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
@@ -20,6 +23,17 @@ ALLOWED_PATHS = ["/"]
 
 UPLOAD_ROOT = os.path.join(tempfile.gettempdir(), 'uploaded_dirs')
 os.makedirs(UPLOAD_ROOT, exist_ok=True)
+
+# Sistem API anahtarları (şimdilik .env veya os.environ üzerinden)
+SYSTEM_KEYS = {
+    "openai": os.environ.get("OPENAI_API_KEY"),
+    "claude": os.environ.get("ANTHROPIC_API_KEY"),
+    "gemini": os.environ.get("GOOGLE_API_KEY"),
+    "copilot": os.environ.get("COPILOT_API_KEY"),
+}
+
+def get_api_key(service, user_key):
+    return user_key if user_key else SYSTEM_KEYS.get(service)
 
 @app.after_request
 def add_header(response):
@@ -297,6 +311,83 @@ def github_save():
         return jsonify({'success': True, 'message': 'Push başarılı'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/ai-agent', methods=['POST'])
+def ai_agent():
+    data = request.json
+    message = data.get('message', '')
+    file_path = data.get('file_path')
+    service_model = data.get('service', 'openai:gpt-4')
+    if ':' in service_model:
+        service, model = service_model.split(':', 1)
+    else:
+        service, model = service_model, ''
+    api_key = get_api_key(service, data.get('api_key'))
+    edit_mode = data.get('edit_mode', 'confirm')
+
+    # Dosya içeriği gerekiyorsa oku
+    file_content = None
+    if file_path:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_content = f.read()
+        except Exception as e:
+            return jsonify({'error': f'Dosya okunamadı: {str(e)}'}), 400
+
+    # Prompt hazırla
+    prompt = message
+    if file_content:
+        prompt += f"\n\nAşağıdaki dosya içeriğiyle ilgili işlem yap:\n{file_content}"
+
+    # Yanıtı al
+    try:
+        if service == "openai":
+            openai.api_key = api_key
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": "Sen bir kod editörü asistanısın."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=1024,
+                temperature=0.2
+            )
+            ai_reply = response['choices'][0]['message']['content']
+
+        elif service == "claude":
+            client = anthropic.Anthropic(api_key=api_key)
+            response = client.messages.create(
+                model=model,
+                max_tokens=1024,
+                temperature=0.2,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            ai_reply = response.content[0].text
+
+        elif service == "gemini":
+            genai.configure(api_key=api_key)
+            model_obj = genai.GenerativeModel(model)
+            response = model_obj.generate_content(prompt)
+            ai_reply = response.text
+
+        elif service == "copilot":
+            ai_reply = "Copilot API henüz desteklenmiyor. (Demo yanıt)"
+
+        else:
+            return jsonify({'error': 'Bilinmeyen AI servisi'}), 400
+
+        # Dosya düzenleme
+        if file_path and edit_mode == "auto":
+            try:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(ai_reply)
+            except Exception as e:
+                return jsonify({'error': f'Dosya yazılamadı: {str(e)}'}), 400
+
+        return jsonify({'reply': ai_reply})
+
+    except Exception as e:
+        return jsonify({'error': f'AI API hatası: {str(e)}'}), 500
 
 # Diğer endpointler eklenecek...
 

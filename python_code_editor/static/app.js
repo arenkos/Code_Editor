@@ -539,4 +539,61 @@ function openGithubFile(path, setTab = true) {
         document.getElementById('file-content').dataset.path = 'github:' + path;
         document.getElementById('current-path').textContent = path;
     });
-} 
+}
+
+// AI Agent panel aç/kapa
+const aiPanel = document.getElementById('ai-agent-panel');
+const aiOpenBtn = document.getElementById('ai-agent-open');
+const aiCloseBtn = document.getElementById('ai-agent-close');
+aiOpenBtn.onclick = () => { aiPanel.classList.remove('closed'); };
+aiCloseBtn.onclick = () => { aiPanel.classList.add('closed'); };
+// AI Agent mesajlaşma
+const aiForm = document.getElementById('ai-agent-form');
+const aiInput = document.getElementById('ai-agent-input');
+const aiMessages = document.getElementById('ai-agent-messages');
+aiForm.onsubmit = function(e) {
+    e.preventDefault();
+    const msg = aiInput.value.trim();
+    if (!msg) return;
+    aiMessages.innerHTML += `<div class='ai-msg-user'>${msg}</div>`;
+    aiInput.value = '';
+    aiMessages.innerHTML += `<div class='ai-msg-agent'>AI yanıtı (demo): <br>"${msg}"</div>`;
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+    // Sonraki adımda backend'e istek atılacak
+};
+
+async function sendAIMessage(message, filePath = null) {
+    const service = document.getElementById('ai-service').value;
+    const apiKey = document.getElementById('ai-api-key').value;
+    const editMode = document.getElementById('edit-mode').value;
+
+    const res = await fetch('/api/ai-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            message,
+            file_path: filePath,
+            service,
+            api_key: apiKey,
+            edit_mode: editMode
+        })
+    });
+    return await res.json();
+}
+
+// Chat paneli mesaj gönderimini bu fonksiyona bağla
+// Örnek:
+document.getElementById('ai-agent-send-btn').onclick = async function() {
+    const input = document.getElementById('ai-agent-input');
+    const message = input.value.trim();
+    if (!message) return;
+    // Dosya ile ilgili komutsa filePath parametresi eklenebilir
+    const response = await sendAIMessage(message);
+    // Yanıtı chat paneline ekle
+    if (response.reply) {
+        // ... chat paneline yanıtı ekle ...
+    } else if (response.error) {
+        // ... hata mesajı göster ...
+    }
+    input.value = '';
+}; 

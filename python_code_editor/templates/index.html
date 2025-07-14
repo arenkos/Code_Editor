@@ -75,6 +75,55 @@
             </div>
         </div>
     </div>
+    <div id="ai-agent-panel" class="closed">
+        <div id="ai-agent-header">
+            <span><i class="fa-solid fa-robot"></i> AI Agent</span>
+            <button id="ai-agent-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <!-- AI Ayarları Paneli (chat panelinin üstüne eklendi) -->
+        <div id="ai-settings" style="display: flex; gap: 1em; align-items: center; margin: 1em 0;">
+          <label>AI Servisi/Modeli:
+            <select id="ai-service">
+              <optgroup label="OpenAI">
+                <option value="openai:gpt-4o">OpenAI GPT-4o</option>
+                <option value="openai:gpt-4">OpenAI GPT-4</option>
+                <option value="openai:gpt-4-turbo">OpenAI GPT-4 Turbo</option>
+                <option value="openai:gpt-3.5-turbo">OpenAI GPT-3.5 Turbo</option>
+              </optgroup>
+              <optgroup label="Anthropic Claude">
+                <option value="claude:claude-3-opus">Claude 3 Opus</option>
+                <option value="claude:claude-3-sonnet">Claude 3 Sonnet</option>
+                <option value="claude:claude-3-haiku">Claude 3 Haiku</option>
+                <option value="claude:claude-2.1">Claude 2.1</option>
+                <option value="claude:claude-2">Claude 2</option>
+              </optgroup>
+              <optgroup label="Google Gemini">
+                <option value="gemini:gemini-1.5-pro">Gemini 1.5 Pro</option>
+                <option value="gemini:gemini-1.0-pro">Gemini 1.0 Pro</option>
+                <option value="gemini:gemini-pro">Gemini Pro</option>
+              </optgroup>
+              <optgroup label="GitHub Copilot">
+                <option value="copilot:default">Copilot (Demo)</option>
+              </optgroup>
+            </select>
+          </label>
+          <label>API Key (isteğe bağlı):
+            <input type="password" id="ai-api-key" placeholder="Kendi API anahtarınız">
+          </label>
+          <label>Düzenleme Modu:
+            <select id="edit-mode">
+              <option value="confirm">Onaylı</option>
+              <option value="auto">Otomatik</option>
+            </select>
+          </label>
+        </div>
+        <div id="ai-agent-messages"></div>
+        <form id="ai-agent-form">
+            <input type="text" id="ai-agent-input" placeholder="Bir şey sor..." autocomplete="off">
+            <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+    <button id="ai-agent-open" title="AI Agent" style="position:absolute;top:60px;right:18px;z-index:20;background:var(--vscode-accent);color:#fff;border:none;border-radius:20px;padding:8px 18px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:1em;cursor:pointer;"><i class="fa-solid fa-robot"></i> AI</button>
     <!-- CodeMirror JS ve modlar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
