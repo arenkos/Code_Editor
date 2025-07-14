@@ -23,12 +23,24 @@ const sidebarTitle = document.getElementById('sidebar-title');
 
 activityBtns.forEach(btn => {
     btn.onclick = function() {
+        let title = btn.title;
+        // Toggle davranışı tüm paneller için
+        if (sidebarPanels[title]) {
+            // Eğer panel zaten açık ise kapat
+            if (sidebarPanels[title].style.display === 'block' && sidebar.classList.contains('open')) {
+                sidebarPanels[title].style.display = 'none';
+                sidebar.classList.remove('open');
+                btn.classList.remove('active');
+                return;
+            } else {
+                sidebar.classList.add('open');
+            }
+        }
         activityBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         // Tüm panelleri gizle
         Object.values(sidebarPanels).forEach(p => p.style.display = 'none');
         // Sadece ilgili paneli göster
-        let title = btn.title;
         if (sidebarPanels[title]) {
             sidebarPanels[title].style.display = 'block';
             sidebarTitle.textContent = title.toUpperCase();
