@@ -71,8 +71,26 @@ body {
   align-items: center;
   gap: 8px;
 }
-#theme-toggle {
+#save-btn {
   margin-left: auto;
+  margin-right: 8px;
+  padding: 8px 20px;
+  background: var(--vscode-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1em;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#save-btn:hover {
+  background: var(--vscode-accent-hover);
+}
+#theme-toggle {
   background: none;
   color: var(--vscode-header-title);
   border: none;
@@ -182,68 +200,61 @@ body {
   flex-direction: column;
   background: var(--vscode-editor);
   overflow: hidden;
+  min-width: 0;
+  min-height: 0;
 }
-#tabs-bar {
-  display: flex;
-  align-items: flex-end;
-  height: 32px;
-  background: var(--vscode-tab-bg);
-  border-bottom: 1px solid var(--vscode-tab-border);
-  padding-left: 8px;
-  gap: 2px;
-}
-.tab {
-  display: flex;
-  align-items: center;
-  background: var(--vscode-tab-inactive);
-  color: var(--vscode-header-title);
-  border: none;
-  border-radius: 6px 6px 0 0;
-  padding: 0 16px;
-  height: 32px;
-  font-size: 1em;
-  cursor: pointer;
-  margin-right: 2px;
-  transition: background 0.15s, color 0.15s;
-  position: relative;
-}
-.tab.active {
-  background: var(--vscode-tab-active);
-  color: var(--vscode-accent);
-  font-weight: 600;
-}
-.tab .tab-close {
-  margin-left: 8px;
-  color: #888;
-  font-size: 1em;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-}
-.tab .tab-close:hover {
-  color: #f33;
-}
-#editor-area {
-  flex: 1;
+#editor-terminal-wrapper {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  justify-content: flex-start;
+  min-height: 0;
+}
+#editor-area {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
   background: var(--vscode-editor);
+}
+/* CodeMirror tam sayfa ve esnek yükseklik */
+.CodeMirror {
+  flex: 1 1 0;
+  height: 100% !important;
+  min-height: 0;
+  width: 100%;
+  font-size: 1.08em;
+  background: var(--vscode-editor-background, #1e1e1e);
+  color: var(--vscode-editor-foreground, #fff);
+  border: none;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+.CodeMirror-scroll {
+  min-height: 0;
+  height: 100% !important;
 }
 #editor-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 12px 0 8px 0;
+  gap: 12px;
+}
+#current-path {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.1em;
+  margin: 0;
 }
 #file-content {
   font-family: 'Fira Mono', 'Consolas', monospace;
   font-size: 15px;
   width: 100%;
   height: 100%;
-  min-height: 350px;
+  min-height: 120px;
   background: var(--vscode-editor);
   color: var(--vscode-header-title);
   border: 1px solid var(--vscode-editor-border);
@@ -251,25 +262,9 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   resize: none;
-  flex: 1;
+  flex: 1 1 0;
   transition: background 0.2s, color 0.2s;
-}
-#save-btn {
-  padding: 8px 20px;
-  background: var(--vscode-accent);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 1em;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-#save-btn:hover {
-  background: var(--vscode-accent-hover);
+  box-sizing: border-box;
 }
 #save-status {
   margin-top: 10px;
