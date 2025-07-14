@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Python Code Editor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+</head>
+<body>
+    <div id="vs-header">
+        <span id="menu-btn" style="display:none;"><i class="fa-solid fa-bars"></i></span>
+        <span id="vs-title"><i class="fa-brands fa-microsoft"></i> Python Code Editor</span>
+        <button id="theme-toggle">🌙 Dark</button>
+    </div>
+    <div id="container">
+        <div id="activitybar">
+            <button class="activity-btn active" title="Explorer"><i class="fa-regular fa-copy"></i></button>
+            <button class="activity-btn" title="Source Control"><i class="fa-solid fa-code-branch"></i></button>
+            <button class="activity-btn" title="Run & Debug"><i class="fa-solid fa-play"></i></button>
+            <button class="activity-btn" title="Extensions"><i class="fa-solid fa-square-plus"></i></button>
+        </div>
+        <div id="sidebar" class="open">
+            <div class="sidebar-header">
+                <span id="sidebar-title">EXPLORER</span>
+                <button id="sidebar-toggle"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <div id="sidebar-explorer">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <button id="explorer-back" title="Üst dizine çık" style="padding:2px 8px;"><i class="fa-solid fa-arrow-left"></i></button>
+                    <span id="explorer-path" style="font-size:0.95em;color:#888;"></span>
+                </div>
+                <input id="explorer-search" type="text" placeholder="Bu dizinde ara..." style="width:100%;margin-bottom:8px;">
+                <ul id="file-list"></ul>
+            </div>
+            <div id="sidebar-source" style="display:none;">
+                <button id="git-status-btn">Git Durumu</button>
+                <pre id="git-status-output" style="font-size:13px;overflow:auto;"></pre>
+            </div>
+            <div id="sidebar-run" style="display:none;">
+                <button id="run-btn">Çalıştır</button>
+                <pre id="run-output" style="font-size:13px;overflow:auto;"></pre>
+            </div>
+            <div id="sidebar-extensions" style="display:none;">
+                <div style="padding:8px;">Eklenti desteği yakında!</div>
+            </div>
+        </div>
+        <div id="main">
+            <button id="show-terminal-btn" title="Terminali Göster" style="position:absolute;right:24px;bottom:24px;z-index:10;display:none;background:var(--vscode-accent);color:#fff;border:none;border-radius:20px;padding:8px 18px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:1em;cursor:pointer;"><i class="fa-solid fa-terminal"></i> Terminal</button>
+            <div id="tabs-bar"></div>
+            <div id="editor-area">
+                <div id="editor-header">
+                    <h2 id="current-path"></h2>
+                    <button id="save-btn"><i class="fa-regular fa-floppy-disk"></i> Kaydet</button>
+                </div>
+                <textarea id="file-content"></textarea>
+                <div id="save-status"></div>
+            </div>
+            <div id="terminal-panel" class="open">
+                <div class="terminal-header">
+                    <span><i class="fa-solid fa-terminal"></i> Terminal</span>
+                    <button id="terminal-toggle"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div id="terminal-output"></div>
+                <form id="terminal-form">
+                    <input type="text" id="terminal-input" autocomplete="off">
+                    <button type="submit">Çalıştır</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- CodeMirror JS ve modlar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/shell/shell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/yaml/yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html> 
