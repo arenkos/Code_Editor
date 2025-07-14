@@ -93,8 +93,15 @@ function openTab(path, name) {
     if (!openTabs.find(t => t.path === path)) {
         openTabs.push({ path, name });
     }
-    setActiveTab(path);
+    activeTab = path;
     renderTabs();
+    if (explorerMode === 'local' || explorerMode === 'upload') {
+        loadFileContent(path);
+    } else if (explorerMode === 'github') {
+        let cleanPath = path;
+        while (cleanPath.startsWith('github:')) cleanPath = cleanPath.slice(7);
+        if (cleanPath) openGithubFile(cleanPath, false); // tekrar openTab çağrılmasın
+    }
 }
 function setActiveTab(path) {
     activeTab = path;
@@ -138,7 +145,21 @@ const explorerBackBtn = document.getElementById('explorer-back');
 const explorerPathSpan = document.getElementById('explorer-path');
 const explorerSearch = document.getElementById('explorer-search');
 
+// Mod: 'local', 'upload', 'github'
+let explorerMode = 'local';
+let uploadedFiles = [];
+let githubFiles = [];
+let githubRepoUrl = '';
+
 function loadFiles(path = '/') {
+    if (explorerMode === 'upload') {
+        showUploadedFiles();
+        return;
+    }
+    if (explorerMode === 'github') {
+        showGithubFiles();
+        return;
+    }
     currentExplorerPath = path;
     if (explorerSearch) explorerSearch.value = '';
     // Terminal oturumunun mevcut dizinini de güncelle
@@ -262,7 +283,28 @@ function saveFile(showAutoSavedTime = false) {
         loadFiles('/');
     });
 }
-document.getElementById('save-btn').onclick = saveFile;
+document.getElementById('save-btn').onclick = function() {
+    if (explorerMode === 'github') {
+        const path = document.getElementById('current-path').textContent;
+        const content = editor.getValue();
+        const repo_url = githubRepoUrl;
+        const token = getGithubToken();
+        const commit_message = prompt('Commit mesajı girin:', 'Web editörden güncelleme');
+        if (!commit_message) return;
+        fetch('/api/github-save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ repo_url, path, content, commit_message, token })
+        })
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('save-status').textContent = data.success ? 'GitHub push başarılı!' : (data.error || 'Push hatası');
+            setTimeout(() => document.getElementById('save-status').textContent = '', 3000);
+        });
+    } else {
+        saveFile();
+    }
+};
 
 // Terminal
 const terminalForm = document.getElementById('terminal-form');
@@ -328,12 +370,173 @@ runBtn && runBtn.addEventListener('click', function() {
 // Başlangıçta dosya listesini yükle
 loadFiles('/');
 
+// --- GITHUB DOSYA AĞACI ---
+function buildTree(files) {
+    const root = {};
+    files.forEach(file => {
+        const parts = file.path.split('/');
+        let node = root;
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            if (!node[part]) {
+                node[part] = (i === parts.length - 1) ? { __file: file.path } : {};
+            }
+            node = node[part];
+        }
+    });
+    return root;
+}
+function renderTree(node, parentUl, parentPath = '') {
+    Object.keys(node).forEach(key => {
+        if (key === '__file') return;
+        const value = node[key];
+        const li = document.createElement('li');
+        if (value.__file) {
+            // Dosya
+            li.textContent = key;
+            li.style.cursor = 'pointer';
+            li.onclick = () => openGithubFile(value.__file);
+            parentUl.appendChild(li);
+        } else {
+            // Klasör
+            li.innerHTML = `<span class='github-folder' style='font-weight:600;cursor:pointer;'><i class="fa-solid fa-folder"></i> ${key}</span>`;
+            const subUl = document.createElement('ul');
+            subUl.style.display = 'none';
+            li.appendChild(subUl);
+            li.querySelector('.github-folder').onclick = function(e) {
+                e.stopPropagation();
+                subUl.style.display = subUl.style.display === 'none' ? 'block' : 'none';
+            };
+            renderTree(value, subUl, parentPath + '/' + key);
+            parentUl.appendChild(li);
+        }
+    });
+}
+function showGithubFiles() {
+    const fileList = document.getElementById('file-list');
+    fileList.innerHTML = '';
+    const tree = buildTree(githubFiles);
+    renderTree(tree, fileList);
+}
+// --- GITHUB TOKEN ---
+function getGithubToken() {
+    let token = localStorage.getItem('github_token') || '';
+    if (!token) {
+        token = prompt('GitHub API limiti için Personal Access Token girin (https://github.com/settings/tokens)');
+        if (token) localStorage.setItem('github_token', token);
+    }
+    return token;
+}
+function clearGithubToken() {
+    localStorage.removeItem('github_token');
+}
+// --- OTOMATİK KAYIT MOD KONTROLÜ ---
 let autoSaveTimeout = null;
 if (editor) {
     editor.on('change', function() {
+        if (explorerMode !== 'local' && explorerMode !== 'upload') return;
         if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
         autoSaveTimeout = setTimeout(() => {
             saveFile(true);
-        }, 1000); // 1 saniye boyunca değişiklik olmazsa kaydet
+        }, 1000);
+    });
+}
+
+// Dizin yükle butonu
+const uploadDirBtn = document.getElementById('upload-dir-btn');
+if (uploadDirBtn) {
+    const dirInput = document.createElement('input');
+    dirInput.type = 'file';
+    dirInput.webkitdirectory = true;
+    dirInput.multiple = true;
+    dirInput.style.display = 'none';
+    uploadDirBtn.parentNode.appendChild(dirInput);
+    uploadDirBtn.onclick = () => dirInput.click();
+    dirInput.onchange = function() {
+        if (!dirInput.files.length) return;
+        const formData = new FormData();
+        for (const file of dirInput.files) {
+            formData.append('files', file, file.webkitRelativePath);
+        }
+        formData.append('sessionId', 'default');
+        fetch('/api/upload-directory', {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                explorerMode = 'upload';
+                // Dosya listesini oluştur
+                uploadedFiles = Array.from(dirInput.files).map(f => f.webkitRelativePath);
+                showUploadedFiles();
+            } else {
+                alert('Yükleme hatası: ' + (data.error || ''));
+            }
+        });
+    };
+}
+function showUploadedFiles() {
+    const fileList = document.getElementById('file-list');
+    fileList.innerHTML = '';
+    uploadedFiles.forEach(path => {
+        const li = document.createElement('li');
+        li.textContent = path;
+        li.style.cursor = 'pointer';
+        li.onclick = () => openUploadedFile(path);
+        fileList.appendChild(li);
+    });
+}
+function openUploadedFile(path) {
+    fetch(`/api/file-content?path=${encodeURIComponent('/tmp/uploaded_dirs/default/' + path)}`)
+        .then(r => r.json())
+        .then(data => {
+            openTab('/tmp/uploaded_dirs/default/' + path, path.split('/').pop());
+            editor.setValue(data.content || '');
+            document.getElementById('file-content').dataset.path = '/tmp/uploaded_dirs/default/' + path;
+            document.getElementById('current-path').textContent = path;
+        });
+}
+// GitHub'dan aç butonu
+const githubOpenBtn = document.getElementById('github-open-btn');
+if (githubOpenBtn) {
+    githubOpenBtn.onclick = function() {
+        const repoUrl = prompt('GitHub repo URL girin (örn: https://github.com/kullanici/proje)');
+        if (repoUrl) {
+            const token = getGithubToken();
+            fetch('/api/github-list', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repo_url: repoUrl, token })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.files) {
+                    explorerMode = 'github';
+                    githubFiles = data.files;
+                    githubRepoUrl = repoUrl;
+                    showGithubFiles();
+                } else {
+                    alert('GitHub API hatası: ' + (data.error || ''));
+                    if (data.details && data.details.includes('API rate limit')) clearGithubToken();
+                }
+            });
+        }
+    };
+}
+function openGithubFile(path, setTab = true) {
+    if (!path) return;
+    const token = getGithubToken();
+    fetch('/api/github-file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ repo_url: githubRepoUrl, path, token })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (setTab) openTab('github:' + path, path.split('/').pop());
+        editor.setValue(data.content || '');
+        document.getElementById('file-content').dataset.path = 'github:' + path;
+        document.getElementById('current-path').textContent = path;
     });
 } 

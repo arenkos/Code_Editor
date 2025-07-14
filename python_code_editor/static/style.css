@@ -373,6 +373,7 @@ body.sidebar-closed #menu-btn {
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   transition: background 0.18s, color 0.18s;
+  min-height: 28px;
 }
 .vsc-btn:hover {
   background: var(--vscode-accent-hover);
@@ -395,6 +396,11 @@ body.sidebar-closed #menu-btn {
   border: 1px solid var(--vscode-editor-border);
   white-space: pre-wrap;
   box-sizing: border-box;
+}
+#upload-dir-btn, #github-open-btn {
+  font-size: 0.95em;
+  padding: 4px 10px;
+  min-width: 0;
 }
 @media (max-width: 800px) {
   #container { flex-direction: column; }

@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, jsonify, send_from_directory, render_template, after_this_request
 from flask_cors import CORS
 import os
 import subprocess
 import threading
 from pathlib import Path
+import tempfile
+import shutil
+import requests
+import base64
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
@@ -13,6 +17,9 @@ terminal_sessions = {}
 
 # Ana dizin (güvenlik için sadece buraya erişim verilecek)
 ALLOWED_PATHS = ["/"]
+
+UPLOAD_ROOT = os.path.join(tempfile.gettempdir(), 'uploaded_dirs')
+os.makedirs(UPLOAD_ROOT, exist_ok=True)
 
 @app.after_request
 def add_header(response):
@@ -155,6 +162,141 @@ def reset_terminal():
         return jsonify({'success': True, 'message': 'Terminal oturumu sıfırlandı'})
     except Exception as e:
         return jsonify({'error': 'Oturum sıfırlanamadı', 'message': str(e)}), 500
+
+@app.route('/api/upload-directory', methods=['POST'])
+def upload_directory():
+    try:
+        files = request.files.getlist('files')
+        session_id = request.form.get('sessionId', 'default')
+        user_dir = os.path.join(UPLOAD_ROOT, session_id)
+        if os.path.exists(user_dir):
+            shutil.rmtree(user_dir)
+        os.makedirs(user_dir, exist_ok=True)
+        for f in files:
+            rel_path = f.filename.lstrip('/')
+            save_path = os.path.join(user_dir, rel_path)
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+            f.save(save_path)
+        return jsonify({'success': True, 'message': 'Dizin yüklendi', 'root': user_dir})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/github-list', methods=['POST'])
+def github_list():
+    try:
+        data = request.json
+        repo_url = data.get('repo_url')
+        branch = data.get('branch')
+        token = data.get('token')
+        if not repo_url:
+            return jsonify({'error': 'Repo URL gerekli'}), 400
+        parts = repo_url.rstrip('/').split('/')
+        user_repo = '/'.join(parts[-2:])
+        headers = {}
+        if token:
+            headers['Authorization'] = f'token {token}'
+        if not branch:
+            repo_api_url = f'https://api.github.com/repos/{user_repo}'
+            repo_resp = requests.get(repo_api_url, headers=headers)
+            if repo_resp.status_code == 200:
+                branch = repo_resp.json().get('default_branch', 'main')
+            else:
+                branch = 'main'
+        api_url = f'https://api.github.com/repos/{user_repo}/git/trees/{branch}?recursive=1'
+        resp = requests.get(api_url, headers=headers)
+        if resp.status_code != 200:
+            return jsonify({'error': f'GitHub API hatası: {resp.status_code}', 'details': resp.text}), 400
+        tree = resp.json().get('tree', [])
+        files = [item for item in tree if item['type'] == 'blob']
+        return jsonify({'files': files})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/github-file', methods=['POST'])
+def github_file():
+    try:
+        data = request.json
+        repo_url = data.get('repo_url')
+        branch = data.get('branch')
+        path = data.get('path')
+        token = data.get('token')
+        if not repo_url or not path:
+            return jsonify({'error': 'Repo URL ve dosya yolu gerekli'}), 400
+        parts = repo_url.rstrip('/').split('/')
+        user_repo = '/'.join(parts[-2:])
+        headers = {}
+        if token:
+            headers['Authorization'] = f'token {token}'
+        if not branch:
+            repo_api_url = f'https://api.github.com/repos/{user_repo}'
+            repo_resp = requests.get(repo_api_url, headers=headers)
+            if repo_resp.status_code == 200:
+                branch = repo_resp.json().get('default_branch', 'main')
+            else:
+                branch = 'main'
+        api_url = f'https://api.github.com/repos/{user_repo}/contents/{path}?ref={branch}'
+        resp = requests.get(api_url, headers=headers)
+        if resp.status_code != 200:
+            return jsonify({'error': 'GitHub API hatası', 'details': resp.text}), 400
+        content = resp.json().get('content', '')
+        if content:
+            try:
+                content = content.replace('\n', '')
+                decoded = base64.b64decode(content).decode('utf-8')
+            except Exception as e:
+                return jsonify({'error': f'Decode hatası: {str(e)}'})
+        else:
+            decoded = ''
+        return jsonify({'content': decoded})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/github-save', methods=['POST'])
+def github_save():
+    try:
+        data = request.json
+        repo_url = data.get('repo_url')
+        branch = data.get('branch')
+        path = data.get('path')
+        content = data.get('content')
+        commit_message = data.get('commit_message')
+        token = data.get('token')
+        if not repo_url or not path or not content or not commit_message or not token:
+            return jsonify({'error': 'Tüm alanlar gerekli'}), 400
+        parts = repo_url.rstrip('/').split('/')
+        user_repo = '/'.join(parts[-2:])
+        headers = {'Authorization': f'token {token}', 'Accept': 'application/vnd.github.v3+json'}
+        # Branch yoksa default_branch çek
+        if not branch:
+            repo_api_url = f'https://api.github.com/repos/{user_repo}'
+            repo_resp = requests.get(repo_api_url, headers=headers)
+            if repo_resp.status_code == 200:
+                branch = repo_resp.json().get('default_branch', 'main')
+            else:
+                branch = 'main'
+        # Önce dosyanın sha'sını al
+        file_api_url = f'https://api.github.com/repos/{user_repo}/contents/{path}?ref={branch}'
+        file_resp = requests.get(file_api_url, headers=headers)
+        if file_resp.status_code != 200:
+            return jsonify({'error': 'Dosya SHA alınamadı', 'details': file_resp.text}), 400
+        sha = file_resp.json().get('sha')
+        if not sha:
+            return jsonify({'error': 'Dosya SHA bulunamadı'}), 400
+        # İçeriği base64 encode et
+        encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
+        # Dosyayı güncelle (commit+push)
+        update_data = {
+            'message': commit_message,
+            'content': encoded_content,
+            'sha': sha,
+            'branch': branch
+        }
+        update_resp = requests.put(file_api_url, headers=headers, json=update_data)
+        if update_resp.status_code not in (200, 201):
+            return jsonify({'error': 'Push başarısız', 'details': update_resp.text}), 400
+        return jsonify({'success': True, 'message': 'Push başarılı'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Diğer endpointler eklenecek...
 
