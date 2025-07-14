@@ -256,6 +256,15 @@ function loadFileContent(path) {
             else if (ext === 'sh') mode = 'shell';
             else if (ext === 'xml') mode = 'xml';
             else if (ext === 'yml' || ext === 'yaml') mode = 'yaml';
+            else if (ext === 'swift') mode = 'swift';
+            else if (ext === 'java') mode = 'text/x-java';
+            else if (ext === 'c') mode = 'text/x-csrc';
+            else if (ext === 'cpp' || ext === 'cc' || ext === 'cxx' || ext === 'hpp' || ext === 'h') mode = 'text/x-c++src';
+            else if (ext === 'go') mode = 'go';
+            else if (ext === 'php') mode = 'php';
+            else if (ext === 'rb') mode = 'ruby';
+            else if (ext === 'rs') mode = 'rust';
+            else if (ext === 'ts') mode = 'javascript'; // veya 'text/typescript' için mod eklenirse
             editor.setOption('mode', mode);
         });
 }
@@ -280,7 +289,7 @@ function saveFile(showAutoSavedTime = false) {
             document.getElementById('save-status').textContent = data.message || data.error;
             setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
         }
-        loadFiles('/');
+        loadFiles(currentExplorerPath);
     });
 }
 document.getElementById('save-btn').onclick = function() {
