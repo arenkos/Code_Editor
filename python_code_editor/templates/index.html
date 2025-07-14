@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Python Code Editor</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=20240611">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- CodeMirror CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
@@ -36,12 +36,12 @@
                 <ul id="file-list"></ul>
             </div>
             <div id="sidebar-source" style="display:none;">
-                <button id="git-status-btn">Git Durumu</button>
-                <pre id="git-status-output" style="font-size:13px;overflow:auto;"></pre>
+                <button id="git-status-btn" class="vsc-btn"><i class="fa-solid fa-code-branch"></i> Git Durumu</button>
+                <pre id="git-status-output" class="vsc-output"></pre>
             </div>
             <div id="sidebar-run" style="display:none;">
-                <button id="run-btn">Çalıştır</button>
-                <pre id="run-output" style="font-size:13px;overflow:auto;"></pre>
+                <button id="run-btn" class="vsc-btn"><i class="fa-solid fa-play"></i> Çalıştır</button>
+                <pre id="run-output" class="vsc-output"></pre>
             </div>
             <div id="sidebar-extensions" style="display:none;">
                 <div style="padding:8px;">Eklenti desteği yakında!</div>
@@ -85,6 +85,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=20240611"></script>
 </body>
 </html> 

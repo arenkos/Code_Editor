@@ -14,6 +14,11 @@ terminal_sessions = {}
 # Ana dizin (güvenlik için sadece buraya erişim verilecek)
 ALLOWED_PATHS = ["/"]
 
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
 @app.route('/api/files', methods=['GET'])
 def list_files():
     try:

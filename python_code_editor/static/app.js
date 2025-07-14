@@ -240,7 +240,7 @@ function loadFileContent(path) {
 }
 
 // Dosya kaydet
-function saveFile() {
+function saveFile(showAutoSavedTime = false) {
     const path = document.getElementById('file-content').dataset.path;
     const content = editor.getValue();
     fetch('/api/save-file', {
@@ -250,8 +250,15 @@ function saveFile() {
     })
     .then(r => r.json())
     .then(data => {
-        document.getElementById('save-status').textContent = data.message || data.error;
-        setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
+        if (showAutoSavedTime) {
+            const now = new Date();
+            const tarih = now.toLocaleDateString('tr-TR');
+            const saat = now.toLocaleTimeString('tr-TR');
+            document.getElementById('save-status').textContent = `Otomatik kaydedildi: ${tarih} ${saat}`;
+        } else {
+            document.getElementById('save-status').textContent = data.message || data.error;
+            setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
+        }
         loadFiles('/');
     });
 }
@@ -319,4 +326,14 @@ runBtn && runBtn.addEventListener('click', function() {
 });
 
 // Başlangıçta dosya listesini yükle
-loadFiles('/'); 
+loadFiles('/');
+
+let autoSaveTimeout = null;
+if (editor) {
+    editor.on('change', function() {
+        if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            saveFile(true);
+        }, 1000); // 1 saniye boyunca değişiklik olmazsa kaydet
+    });
+} 
