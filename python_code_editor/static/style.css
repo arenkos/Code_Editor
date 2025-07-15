@@ -571,3 +571,48 @@ body.sidebar-closed #menu-btn {
     width: 100%;
   }
 } 
+#tabs-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  height: 32px;
+  background: var(--vscode-tab-bg);
+  border-bottom: 1px solid var(--vscode-tab-border);
+  padding-left: 8px;
+  gap: 2px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  background: var(--vscode-tab-inactive);
+  color: var(--vscode-header-title);
+  border: none;
+  border-radius: 6px 6px 0 0;
+  padding: 0 16px;
+  height: 32px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-right: 2px;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  white-space: nowrap;
+}
+.tab.active {
+  background: var(--vscode-tab-active);
+  color: var(--vscode-accent);
+  font-weight: 600;
+}
+.tab .tab-close {
+  margin-left: 8px;
+  color: #888;
+  font-size: 1em;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.tab .tab-close:hover {
+  color: #f33;
+} 

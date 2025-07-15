@@ -98,28 +98,64 @@ showTerminalBtn.onclick = function() {
 };
 
 // Sekmeli editör yönetimi
-let openTabs = [];
+let openTabs = []; // { path, name, content, dirty }
 let activeTab = null;
 const tabsBar = document.getElementById('tabs-bar');
+
+function findTab(path) {
+    return openTabs.find(t => t.path === path);
+}
+
 function openTab(path, name) {
-    if (!openTabs.find(t => t.path === path)) {
-        openTabs.push({ path, name });
+    let tab = findTab(path);
+    if (!tab) {
+        tab = { path, name, content: null, lastSavedContent: null, dirty: false };
+        openTabs.push(tab);
+    }
+    // Sadece aktif sekmenin içeriğini kaydet
+    if (activeTab && activeTab !== path) {
+        const prevTab = findTab(activeTab);
+        if (prevTab) {
+            prevTab.content = editor.getValue();
+            prevTab.dirty = prevTab.content !== prevTab.lastSavedContent;
+        }
     }
     activeTab = path;
     renderTabs();
-    if (explorerMode === 'local' || explorerMode === 'upload') {
-        loadFileContent(path);
+    // Eğer localde içerik varsa onu göster, yoksa sunucudan yükle
+    if (tab.content !== null) {
+        editor.setValue(tab.content);
+        document.getElementById('file-content').dataset.path = path;
+        document.getElementById('current-path').textContent = path;
+    } else if (explorerMode === 'local' || explorerMode === 'upload') {
+        loadFileContent(path, true); // local cache güncellensin
     } else if (explorerMode === 'github') {
         let cleanPath = path;
         while (cleanPath.startsWith('github:')) cleanPath = cleanPath.slice(7);
-        if (cleanPath) openGithubFile(cleanPath, false); // tekrar openTab çağrılmasın
+        if (cleanPath) openGithubFile(cleanPath, false);
     }
 }
+
 function setActiveTab(path) {
+    if (activeTab && activeTab !== path) {
+        const prevTab = findTab(activeTab);
+        if (prevTab) {
+            prevTab.content = editor.getValue();
+            prevTab.dirty = prevTab.content !== prevTab.lastSavedContent;
+        }
+    }
     activeTab = path;
-    loadFileContent(path);
+    const tab = findTab(path);
     renderTabs();
+    if (tab && tab.content !== null) {
+        editor.setValue(tab.content);
+        document.getElementById('file-content').dataset.path = path;
+        document.getElementById('current-path').textContent = path;
+    } else {
+        loadFileContent(path, true);
+    }
 }
+
 function closeTab(path) {
     openTabs = openTabs.filter(t => t.path !== path);
     if (activeTab === path) {
@@ -135,12 +171,13 @@ function closeTab(path) {
         renderTabs();
     }
 }
+
 function renderTabs() {
     tabsBar.innerHTML = '';
     openTabs.forEach(tab => {
         const tabEl = document.createElement('div');
         tabEl.className = 'tab' + (tab.path === activeTab ? ' active' : '');
-        tabEl.textContent = tab.name;
+        tabEl.textContent = tab.name + (tab.dirty ? ' *' : '');
         tabEl.onclick = () => setActiveTab(tab.path);
         const closeBtn = document.createElement('button');
         closeBtn.className = 'tab-close';
@@ -249,42 +286,58 @@ function setupEditor() {
 setupEditor();
 
 // Dosya içeriği yükle (ve dil modunu ayarla)
-function loadFileContent(path) {
+function loadFileContent(path, updateTabContent = false) {
     fetch(`/api/file-content?path=${encodeURIComponent(path)}`)
         .then(r => r.json())
         .then(data => {
-            editor.setValue(data.content || '');
-            document.getElementById('file-content').dataset.path = path;
-            document.getElementById('current-path').textContent = path;
-            // Dil modunu dosya uzantısına göre ayarla
-            const ext = path.split('.').pop();
-            let mode = 'text/plain';
-            if (ext === 'js') mode = 'javascript';
-            else if (ext === 'py') mode = 'python';
-            else if (ext === 'json') mode = 'application/json';
-            else if (ext === 'html') mode = 'htmlmixed';
-            else if (ext === 'css') mode = 'css';
-            else if (ext === 'md') mode = 'markdown';
-            else if (ext === 'sh') mode = 'shell';
-            else if (ext === 'xml') mode = 'xml';
-            else if (ext === 'yml' || ext === 'yaml') mode = 'yaml';
-            else if (ext === 'swift') mode = 'swift';
-            else if (ext === 'java') mode = 'text/x-java';
-            else if (ext === 'c') mode = 'text/x-csrc';
-            else if (ext === 'cpp' || ext === 'cc' || ext === 'cxx' || ext === 'hpp' || ext === 'h') mode = 'text/x-c++src';
-            else if (ext === 'go') mode = 'go';
-            else if (ext === 'php') mode = 'php';
-            else if (ext === 'rb') mode = 'ruby';
-            else if (ext === 'rs') mode = 'rust';
-            else if (ext === 'ts') mode = 'javascript'; // veya 'text/typescript' için mod eklenirse
-            editor.setOption('mode', mode);
+            // Sadece ilgili sekmenin content'ini güncelle
+            const tab = findTab(path);
+            if (tab && updateTabContent) {
+                tab.content = data.content || '';
+                tab.lastSavedContent = data.content || '';
+                tab.dirty = false;
+            }
+            // Eğer şu an aktif sekme buysa editöre yaz
+            if (activeTab === path) {
+                editor.setValue(data.content || '');
+                document.getElementById('file-content').dataset.path = path;
+                document.getElementById('current-path').textContent = path;
+                // Dil modunu dosya uzantısına göre ayarla
+                const ext = path.split('.').pop();
+                let mode = 'text/plain';
+                if (ext === 'js') mode = 'javascript';
+                else if (ext === 'py') mode = 'python';
+                else if (ext === 'json') mode = 'application/json';
+                else if (ext === 'html') mode = 'htmlmixed';
+                else if (ext === 'css') mode = 'css';
+                else if (ext === 'md') mode = 'markdown';
+                else if (ext === 'sh') mode = 'shell';
+                else if (ext === 'xml') mode = 'xml';
+                else if (ext === 'yml' || ext === 'yaml') mode = 'yaml';
+                else if (ext === 'swift') mode = 'swift';
+                else if (ext === 'java') mode = 'text/x-java';
+                else if (ext === 'c') mode = 'text/x-csrc';
+                else if (ext === 'cpp' || ext === 'cc' || ext === 'cxx' || ext === 'hpp' || ext === 'h') mode = 'text/x-c++src';
+                else if (ext === 'go') mode = 'go';
+                else if (ext === 'php') mode = 'php';
+                else if (ext === 'rb') mode = 'ruby';
+                else if (ext === 'rs') mode = 'rust';
+                else if (ext === 'ts') mode = 'javascript';
+                editor.setOption('mode', mode);
+            }
         });
 }
 
-// Dosya kaydet
+// Kaydetme fonksiyonunda ilgili tab'ın content ve dirty durumunu güncelle
 function saveFile(showAutoSavedTime = false) {
     const path = document.getElementById('file-content').dataset.path;
-    const content = editor.getValue();
+    const tab = findTab(path);
+    const content = tab ? tab.content : editor.getValue();
+    console.log('KAYDET:', path, content); // Debug için
+    if (!path || content === undefined || content === null) {
+        console.warn('Kaydetme iptal edildi: path veya content eksik.');
+        return;
+    }
     fetch('/api/save-file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -300,6 +353,11 @@ function saveFile(showAutoSavedTime = false) {
         } else {
             document.getElementById('save-status').textContent = data.message || data.error;
             setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
+        }
+        if (tab) {
+            tab.lastSavedContent = content;
+            tab.dirty = false;
+            renderTabs();
         }
         loadFiles(currentExplorerPath);
     });
@@ -453,14 +511,17 @@ function clearGithubToken() {
 }
 // --- OTOMATİK KAYIT MOD KONTROLÜ ---
 let autoSaveTimeout = null;
+// CodeMirror değişikliklerinde aktif sekmenin içeriğini güncel tut
 if (editor) {
-    editor.on('change', function() {
+    // Sadece klavye tuşuna basıldığında tetiklenecek
+    editor.on('keydown', function() {
         if (explorerMode !== 'local' && explorerMode !== 'upload') return;
         if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
         autoSaveTimeout = setTimeout(() => {
             saveFile(true);
-        }, 1000);
+        }, 2000); // 2 saniye boyunca tuşa basılmazsa kaydet
     });
+    // Diğer değişikliklerde (örneğin mouse ile) otomatik kaydetme olmasın
 }
 
 // Dizin yükle butonu
