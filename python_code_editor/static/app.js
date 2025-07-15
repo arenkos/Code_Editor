@@ -64,22 +64,22 @@ sidebarPanels['Explorer'].style.display = 'block';
 
 // Sidebar aç/kapa
 const sidebar = document.getElementById('sidebar');
-const menuBtn = document.getElementById('menu-btn');
+//const menuBtn = document.getElementById('menu-btn');
 document.getElementById('sidebar-toggle').onclick = function() {
     sidebar.classList.toggle('open');
     if (!sidebar.classList.contains('open')) {
         document.body.classList.add('sidebar-closed');
-        menuBtn.style.display = 'inline-block';
+        //menuBtn.style.display = 'inline-block';
     } else {
         document.body.classList.remove('sidebar-closed');
-        menuBtn.style.display = 'none';
+        //menuBtn.style.display = 'none';
     }
 };
-menuBtn.onclick = function() {
-    sidebar.classList.add('open');
-    document.body.classList.remove('sidebar-closed');
-    menuBtn.style.display = 'none';
-};
+//menuBtn.onclick = function() {
+//    sidebar.classList.add('open');
+//    document.body.classList.remove('sidebar-closed');
+//    menuBtn.style.display = 'none';
+//};
 
 // Terminal aç/kapa
 const showTerminalBtn = document.getElementById('show-terminal-btn');
@@ -389,9 +389,23 @@ document.getElementById('save-btn').onclick = function() {
 const terminalForm = document.getElementById('terminal-form');
 const terminalInput = document.getElementById('terminal-input');
 const terminalOutput = document.getElementById('terminal-output');
+// Loading animasyonu için ek div
+let terminalLoading = document.createElement('div');
+terminalLoading.id = 'terminal-loading';
+terminalLoading.style.display = 'none';
+terminalLoading.innerHTML = `<span class='spinner' style='display:inline-block;width:18px;height:18px;border:3px solid #4f8cff;border-top:3px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;'></span> <span style='color:#4f8cff;'>Çalışıyor...</span>`;
+terminalOutput.parentNode.insertBefore(terminalLoading, terminalOutput);
+
+// CSS animasyonu ekle (spin)
+const style = document.createElement('style');
+style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }`;
+document.head.appendChild(style);
+
 terminalForm.onsubmit = function(e) {
     e.preventDefault();
     const command = terminalInput.value;
+    if (!command) return;
+    terminalLoading.style.display = 'block';
     fetch('/api/terminal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -399,11 +413,16 @@ terminalForm.onsubmit = function(e) {
     })
     .then(r => r.json())
     .then(data => {
+        terminalLoading.style.display = 'none';
         // Satır satır ve kod bloğu olarak göster
         const output = (data.output || data.error || '').replace(/\r?\n/g, '<br>');
         terminalOutput.innerHTML += `<div><span style='color:#4f8cff;'>&gt; ${command}</span></div><div style='margin-bottom:8px;'><code style='white-space:pre-wrap;'>${output}</code></div>`;
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
         terminalInput.value = '';
+    })
+    .catch(() => {
+        terminalLoading.style.display = 'none';
+        terminalOutput.innerHTML += `<div style='color:red;'>Komut çalıştırılırken hata oluştu.</div>`;
     });
 };
 
