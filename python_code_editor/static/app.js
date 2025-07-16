@@ -4,11 +4,23 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Tema geçişi
   const themeToggle = document.getElementById('theme-toggle');
+  let currentLang = localStorage.getItem('lang') || 'tr';
   if (themeToggle) {
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      themeToggle.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      // --- DİL ÇEVİRİSİ ---
+      const translations = window.translations || {
+        en: { dark: 'Dark', light: 'Light' },
+        tr: { dark: 'Koyu', light: 'Açık' },
+        de: { dark: 'Dunkel', light: 'Hell' },
+        fr: { dark: 'Sombre', light: 'Clair' },
+        es: { dark: 'Oscuro', light: 'Claro' },
+        hi: { dark: 'गहरा', light: 'हल्का' },
+        zh: { dark: '深色', light: '浅色' }
+      };
+      const t = translations[currentLang] || translations['en'];
+      themeToggle.textContent = theme === 'dark' ? `☀️ ${t.light}` : `🌙 ${t.dark}`;
     }
     themeToggle.onclick = function() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
@@ -206,9 +218,22 @@ window.addEventListener('DOMContentLoaded', function() {
   window.uploadedFiles = [];
   window.githubFiles = [];
   window.githubRepoUrl = '';
-  window.explorerBackBtn = null;
-  window.explorerPathSpan = null;
-  window.explorerSearch = null;
+  // Explorer paneli için DOM elementlerini başta al
+  window.explorerBackBtn = document.getElementById('explorer-back');
+  window.explorerPathSpan = document.getElementById('explorer-path');
+  window.explorerSearch = document.getElementById('explorer-search');
+
+  // Geri butonunun çalışmasını burada bağla
+  if (window.explorerBackBtn) {
+    window.explorerBackBtn.onclick = function() {
+      if (window.currentExplorerPath === '/' || window.currentExplorerPath === '') return;
+      const parent = window.currentExplorerPath.replace(/\/$/, '').split('/').slice(0, -1).join('/') || '/';
+      loadFiles(parent);
+    };
+  }
+  // window.explorerBackBtn = null;
+  // window.explorerPathSpan = null;
+  // window.explorerSearch = null;
   window.activityBtns = null;
   window.sidebarPanels = null;
   window.sidebarTitle = null;
@@ -941,16 +966,19 @@ window.addEventListener('DOMContentLoaded', function() {
       working: '工作中...'
     }
   };
+  window.translations = translations;
 
   function setLanguage(lang) {
     localStorage.setItem('lang', lang);
+    currentLang = lang;
     const t = translations[lang] || translations['en'];
     // Header
     if (saveBtn) saveBtn.innerHTML = `<i class="fa-regular fa-floppy-disk"></i> ${t.save}`;
     if (themeToggle) {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
       const themeToggleIcon = document.getElementById('theme-toggle-icon');
-      if (themeToggleIcon) themeToggleIcon.textContent = lang === 'dark' ? '☀️' : '🌙';
-      themeToggle.innerHTML = `<span id="theme-toggle-icon">${lang === 'dark' ? '☀️' : '🌙'}</span> ${t.dark}`;
+      if (themeToggleIcon) themeToggleIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      themeToggle.innerHTML = `<span id="theme-toggle-icon">${theme === 'dark' ? '☀️' : '🌙'}</span> ${theme === 'dark' ? t.light : t.dark}`;
     }
     // Explorer başlığı
     if (sidebarTitle) sidebarTitle.textContent = t.explorer;
