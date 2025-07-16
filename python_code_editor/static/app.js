@@ -1066,4 +1066,123 @@ window.addEventListener('DOMContentLoaded', function() {
   //.defineSimpleMode ...
   // (Kullanılmıyorsa bu kısmı atlayın)
 
+  // --- FIND & REPLACE PANEL ---
+  const findInput = document.getElementById('find-input');
+  const replaceInput = document.getElementById('replace-input');
+  const findNextBtn = document.getElementById('find-next-btn');
+  const replaceBtn = document.getElementById('replace-btn');
+  const replaceAllBtn = document.getElementById('replace-all-btn');
+
+  // Arama highlight'larını temizle
+  function clearSearchHighlights() {
+    if (editor) {
+      editor.getAllMarks().forEach(mark => {
+        if (mark.className === 'CodeMirror-searching') {
+          mark.clear();
+        }
+      });
+    }
+  }
+
+  // Arama yap ve highlight'ları göster
+  function performSearch(query) {
+    if (!editor || !query) {
+      clearSearchHighlights();
+      return;
+    }
+    
+    clearSearchHighlights();
+    const cursor = editor.getSearchCursor(query);
+    while (cursor.findNext()) {
+      editor.addWidget(cursor.from(), document.createElement('span'), true);
+      editor.markText(cursor.from(), cursor.to(), {
+        className: 'CodeMirror-searching'
+      });
+    }
+  }
+
+  if (findInput) {
+    // Arama kutusuna yazıldığında anında arama yap
+    findInput.addEventListener('input', function() {
+      performSearch(this.value);
+    });
+
+    // Arama kutusundan çıkınca highlight'ları temizle
+    findInput.addEventListener('blur', function() {
+      if (!this.value) {
+        clearSearchHighlights();
+      }
+    });
+  }
+
+  if (findNextBtn) {
+    findNextBtn.onclick = function() {
+      const query = findInput.value;
+      if (!query) return;
+      
+      // Önce highlight'ları temizle
+      clearSearchHighlights();
+      
+      const cursor = editor.getSearchCursor(query, editor.getCursor());
+      if (cursor.findNext()) {
+        editor.setSelection(cursor.from(), cursor.to());
+        editor.scrollIntoView({from: cursor.from(), to: cursor.to()});
+        // Seçili olanı highlight et
+        editor.markText(cursor.from(), cursor.to(), {
+          className: 'CodeMirror-searching'
+        });
+      } else {
+        // Baştan ara
+        const cursor2 = editor.getSearchCursor(query, {line:0, ch:0});
+        if (cursor2.findNext()) {
+          editor.setSelection(cursor2.from(), cursor2.to());
+          editor.scrollIntoView({from: cursor2.from(), to: cursor2.to()});
+          editor.markText(cursor2.from(), cursor2.to(), {
+            className: 'CodeMirror-searching'
+          });
+        }
+      }
+    };
+  }
+  if (replaceBtn) {
+    replaceBtn.onclick = function() {
+      const query = findInput.value;
+      const replaceWith = replaceInput.value;
+      if (!query) return;
+      const cursor = editor.getSearchCursor(query, editor.getCursor());
+      if (cursor.findNext()) {
+        editor.setSelection(cursor.from(), cursor.to());
+        editor.replaceSelection(replaceWith);
+        // Highlight'ları güncelle
+        performSearch(query);
+      }
+    };
+  }
+  if (replaceAllBtn) {
+    replaceAllBtn.onclick = function() {
+      const query = findInput.value;
+      const replaceWith = replaceInput.value;
+      if (!query) return;
+      editor.operation(function() {
+        const cursor = editor.getSearchCursor(query, {line:0, ch:0});
+        while (cursor.findNext()) {
+          cursor.replace(replaceWith);
+        }
+      });
+      // Highlight'ları temizle
+      clearSearchHighlights();
+    };
+  }
+
+  // Ctrl+F kısayolu ekle
+  if (findInput) {
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault();
+        findInput.focus();
+        findInput.select();
+      }
+    });
+  }
+
 }); 

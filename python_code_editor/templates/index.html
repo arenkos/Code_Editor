@@ -68,6 +68,14 @@
                 <div id="editor-area" style="flex:1 1 0;display:flex;flex-direction:column;min-height:0;">
                     <div id="editor-header">
                         <h2 id="current-path"></h2>
+                        <!-- Find & Replace Panel -->
+                        <div id="find-replace-panel" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+                          <input id="find-input" type="text" placeholder="Bul..." style="width:120px;">
+                          <input id="replace-input" type="text" placeholder="Değiştir..." style="width:120px;">
+                          <button id="find-next-btn" title="Sonrakini bul">Bul</button>
+                          <button id="replace-btn" title="Değiştir">Değiştir</button>
+                          <button id="replace-all-btn" title="Tümünü değiştir">Tümünü Değiştir</button>
+                        </div>
                     </div>
                     <textarea id="file-content"></textarea>
                     <div id="save-status"></div>
@@ -154,6 +162,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/matchesonscrollbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/jump-to-line.min.js"></script>
     <script src="/static/app.js?v=20240611"></script>
 </body>
 </html> 
