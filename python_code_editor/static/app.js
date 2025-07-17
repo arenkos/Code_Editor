@@ -813,7 +813,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'Saved successfully',
       autoSaved: 'Auto-saved:',
       loading: 'Loading...',
-      working: 'Working...'
+      working: 'Working...',
+      findPlaceholder: 'Find...',
+      replacePlaceholder: 'Replace...',
+      findBtn: 'Find',
+      replaceBtn: 'Replace',
+      replaceAllBtn: 'Replace All',
+      foundCount: '{n} found',
+      foundNone: 'No matches found',
+      findAllTabsBtn: 'Find in All Tabs',
+      foundNoneTabs: 'No matches found in any tab',
+      replacedCountTabs: '{n} replaced',
+      replacedNoneTabs: 'No replacements made in any tab'
     },
     tr: {
       save: 'Kaydet',
@@ -824,7 +835,7 @@ window.addEventListener('DOMContentLoaded', function() {
       run: 'ÇALIŞTIR',
       extensions: 'EKLENTİLER',
       uploadDir: 'Dizin Yükle',
-      githubOpen: 'GitHub’dan Aç',
+      githubOpen: 'GitHub\'dan Aç',
       searchPlaceholder: 'Bu dizinde ara...',
       back: 'Üst dizine çık',
       gitStatus: 'Git Durumu',
@@ -838,7 +849,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'Başarıyla kaydedildi',
       autoSaved: 'Otomatik kaydedildi:',
       loading: 'Yükleniyor...',
-      working: 'Çalışıyor...'
+      working: 'Çalışıyor...',
+      findPlaceholder: 'Bul...',
+      replacePlaceholder: 'Değiştir...',
+      findBtn: 'Bul',
+      replaceBtn: 'Değiştir',
+      replaceAllBtn: 'Tümünü Değiştir',
+      foundCount: '{n} bulundu',
+      foundNone: 'Eşleşme bulunamadı',
+      findAllTabsBtn: 'Tüm Sekmelerde Bul',
+      foundNoneTabs: 'Hiçbir sekmede eşleşme bulunamadı',
+      replacedCountTabs: '{n} değiştirildi',
+      replacedNoneTabs: 'Hiçbir sekmede değiştirme yapıldı'
     },
     de: {
       save: 'Speichern',
@@ -863,7 +885,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'Erfolgreich gespeichert',
       autoSaved: 'Automatisch gespeichert:',
       loading: 'Lädt...',
-      working: 'Wird bearbeitet...'
+      working: 'Wird bearbeitet...',
+      findPlaceholder: 'Suchen...',
+      replacePlaceholder: 'Ersetzen...',
+      findBtn: 'Suchen',
+      replaceBtn: 'Ersetzen',
+      replaceAllBtn: 'Alle ersetzen',
+      foundCount: '{n} gefunden',
+      foundNone: 'Keine Übereinstimmungen gefunden',
+      findAllTabsBtn: 'In allen Registerkarten suchen',
+      foundNoneTabs: 'Keine Übereinstimmungen in irgendeiner Registerkarte gefunden',
+      replacedCountTabs: '{n} ersetzt',
+      replacedNoneTabs: 'In keiner Registerkarte wurde ersetzt'
     },
     fr: {
       save: 'Enregistrer',
@@ -888,7 +921,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'Enregistré avec succès',
       autoSaved: 'Enregistré automatiquement:',
       loading: 'Chargement...',
-      working: 'En cours...'
+      working: 'En cours...',
+      findPlaceholder: 'Rechercher...',
+      replacePlaceholder: 'Remplacer...',
+      findBtn: 'Rechercher',
+      replaceBtn: 'Remplacer',
+      replaceAllBtn: 'Tout remplacer',
+      foundCount: '{n} trouvés',
+      foundNone: 'Aucune correspondance trouvée',
+      findAllTabsBtn: 'Rechercher dans toutes les onglets',
+      foundNoneTabs: 'Aucune correspondance trouvée dans aucun onglet',
+      replacedCountTabs: '{n} remplacés',
+      replacedNoneTabs: 'Aucun remplacement effectué dans aucun onglet'
     },
     es: {
       save: 'Guardar',
@@ -913,7 +957,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'Guardado con éxito',
       autoSaved: 'Guardado automáticamente:',
       loading: 'Cargando...',
-      working: 'Trabajando...'
+      working: 'Trabajando...',
+      findPlaceholder: 'Buscar...',
+      replacePlaceholder: 'Reemplazar...',
+      findBtn: 'Buscar',
+      replaceBtn: 'Reemplazar',
+      replaceAllBtn: 'Reemplazar todo',
+      foundCount: '{n} encontrado',
+      foundNone: 'Ninguna coincidencia encontrada',
+      findAllTabsBtn: 'Buscar en todas las pestañas',
+      foundNoneTabs: 'Ninguna coincidencia encontrada en ninguna pestaña',
+      replacedCountTabs: '{n} reemplazado',
+      replacedNoneTabs: 'Ningún reemplazo realizado en ninguna pestaña'
     },
     hi: {
       save: 'सहेजें',
@@ -938,7 +993,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: 'सफलतापूर्वक सहेजा गया',
       autoSaved: 'स्वचालित रूप से सहेजा गया:',
       loading: 'लोड हो रहा है...',
-      working: 'काम कर रहा है...'
+      working: 'काम कर रहा है...',
+      findPlaceholder: 'खोजें...',
+      replacePlaceholder: 'बदलें...',
+      findBtn: 'खोजें',
+      replaceBtn: 'बदलें',
+      replaceAllBtn: 'सभी बदलें',
+      foundCount: '{n} खोजें',
+      foundNone: 'कोई मिलान नहीं मिला',
+      findAllTabsBtn: 'सभी टैब्स में खोजें',
+      foundNoneTabs: 'कोई मिलान नहीं मिला किसी भी टैब में',
+      replacedCountTabs: '{n} बदलें',
+      replacedNoneTabs: 'कोई बदलाव नहीं किया गया किसी भी टैब में'
     },
     zh: {
       save: '保存',
@@ -963,7 +1029,18 @@ window.addEventListener('DOMContentLoaded', function() {
       saveStatus: '保存成功',
       autoSaved: '自动保存:',
       loading: '加载中...',
-      working: '工作中...'
+      working: '工作中...',
+      findPlaceholder: '查找...',
+      replacePlaceholder: '替换...',
+      findBtn: '查找',
+      replaceBtn: '替换',
+      replaceAllBtn: '全部替换',
+      foundCount: '{n} 找到',
+      foundNone: '未找到匹配项',
+      findAllTabsBtn: '在所有标签页中查找',
+      foundNoneTabs: '未找到任何标签页中的匹配项',
+      replacedCountTabs: '{n} 替换',
+      replacedNoneTabs: '未在任何标签页中进行替换'
     }
   };
   window.translations = translations;
@@ -1037,6 +1114,19 @@ window.addEventListener('DOMContentLoaded', function() {
         labels[2].childNodes[0].textContent = 'Edit Mode:';
       }
     }
+    // Find & Replace paneli çevirileri
+    const findInput = document.getElementById('find-input');
+    const replaceInput = document.getElementById('replace-input');
+    const findNextBtn = document.getElementById('find-next-btn');
+    const replaceBtn = document.getElementById('replace-btn');
+    const replaceAllBtn = document.getElementById('replace-all-btn');
+    
+    if (findInput) findInput.placeholder = t.findPlaceholder;
+    if (replaceInput) replaceInput.placeholder = t.replacePlaceholder;
+    if (findNextBtn) findNextBtn.textContent = t.findBtn;
+    if (replaceBtn) replaceBtn.textContent = t.replaceBtn;
+    if (replaceAllBtn) replaceAllBtn.textContent = t.replaceAllBtn;
+    
     attachActivityBtnHandlers();
   }
 
@@ -1072,6 +1162,8 @@ window.addEventListener('DOMContentLoaded', function() {
   const findNextBtn = document.getElementById('find-next-btn');
   const replaceBtn = document.getElementById('replace-btn');
   const replaceAllBtn = document.getElementById('replace-all-btn');
+  const findAllTabsBtn = document.getElementById('find-all-tabs-btn');
+  const replaceAllTabsBtn = document.getElementById('replace-all-tabs-btn');
 
   // Arama highlight'larını temizle
   function clearSearchHighlights() {
@@ -1082,22 +1174,32 @@ window.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
+    // Eşleşme sayısını sıfırla
+    const findCount = document.getElementById('find-count');
+    if (findCount) findCount.textContent = '';
   }
 
-  // Arama yap ve highlight'ları göster
+  // Arama yap ve highlight'ları göster, eşleşme sayısını yaz
   function performSearch(query) {
+    const findCount = document.getElementById('find-count');
     if (!editor || !query) {
       clearSearchHighlights();
+      if (findCount) findCount.textContent = '';
       return;
     }
-    
     clearSearchHighlights();
+    let count = 0;
     const cursor = editor.getSearchCursor(query);
     while (cursor.findNext()) {
-      editor.addWidget(cursor.from(), document.createElement('span'), true);
       editor.markText(cursor.from(), cursor.to(), {
         className: 'CodeMirror-searching'
       });
+      count++;
+    }
+    if (findCount) {
+      // Dil desteği
+      const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
+      findCount.textContent = count > 0 ? t.foundCount.replace('{n}', count) : t.foundNone;
     }
   }
 
@@ -1171,6 +1273,62 @@ window.addEventListener('DOMContentLoaded', function() {
       });
       // Highlight'ları temizle
       clearSearchHighlights();
+    };
+  }
+
+  // Tüm sekmelerde bul
+  if (findAllTabsBtn) {
+    findAllTabsBtn.onclick = function() {
+      const query = findInput.value;
+      if (!query) return;
+      let total = 0;
+      openTabs.forEach(tab => {
+        if (tab.content !== null) {
+          let count = 0;
+          const doc = new window.CodeMirror.Doc(tab.content);
+          const cursor = doc.getSearchCursor(query);
+          while (cursor.findNext()) count++;
+          total += count;
+        }
+      });
+      const findCount = document.getElementById('find-count');
+      const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
+      findCount.textContent = total > 0 ? t.foundCountTabs.replace('{n}', total) : t.foundNoneTabs;
+    };
+  }
+
+  // Tüm sekmelerde değiştir
+  if (replaceAllTabsBtn) {
+    replaceAllTabsBtn.onclick = function() {
+      const query = findInput.value;
+      const replaceWith = replaceInput.value;
+      if (!query) return;
+      let total = 0;
+      openTabs.forEach(tab => {
+        if (tab.content !== null) {
+          let count = 0;
+          let doc = new window.CodeMirror.Doc(tab.content);
+          doc.operation(function() {
+            const cursor = doc.getSearchCursor(query, {line:0, ch:0});
+            while (cursor.findNext()) {
+              cursor.replace(replaceWith);
+              count++;
+            }
+          });
+          if (count > 0) {
+            tab.content = doc.getValue();
+            tab.dirty = true;
+            total += count;
+            // Eğer aktif sekme ise editörü de güncelle
+            if (activeTab === tab.path) {
+              editor.setValue(tab.content);
+            }
+          }
+        }
+      });
+      const findCount = document.getElementById('find-count');
+      const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
+      findCount.textContent = total > 0 ? t.replacedCountTabs.replace('{n}', total) : t.replacedNoneTabs;
     };
   }
 
