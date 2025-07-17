@@ -1343,4 +1343,143 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // --- ÜYELİK MODALI ---
+  const authModal = document.getElementById('auth-modal');
+  const authModalClose = document.getElementById('auth-modal-close');
+  const authLoginTab = document.getElementById('auth-login-tab');
+  const authRegisterTab = document.getElementById('auth-register-tab');
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  const loginError = document.getElementById('login-error');
+  const registerError = document.getElementById('register-error');
+
+  // Modal aç/kapa fonksiyonları
+  function openAuthModal(tab = 'login') {
+    if (authModal) authModal.style.display = 'flex';
+    if (tab === 'login') {
+      if (authLoginTab) authLoginTab.classList.add('active');
+      if (authRegisterTab) authRegisterTab.classList.remove('active');
+      if (loginForm) loginForm.style.display = 'block';
+      if (registerForm) registerForm.style.display = 'none';
+    } else {
+      if (authLoginTab) authLoginTab.classList.remove('active');
+      if (authRegisterTab) authRegisterTab.classList.add('active');
+      if (loginForm) loginForm.style.display = 'none';
+      if (registerForm) registerForm.style.display = 'block';
+    }
+    if (loginError) loginError.textContent = '';
+    if (registerError) registerError.textContent = '';
+  }
+  function closeAuthModal() {
+    if (authModal) authModal.style.display = 'none';
+  }
+  if (authModalClose) authModalClose.onclick = closeAuthModal;
+  if (authLoginTab) authLoginTab.onclick = () => openAuthModal('login');
+  if (authRegisterTab) authRegisterTab.onclick = () => openAuthModal('register');
+  // Modal dışında tıklayınca kapat
+  if (authModal) {
+    authModal.addEventListener('click', function(e) {
+      if (e.target === authModal) closeAuthModal();
+    });
+  }
+
+  // Giriş formu
+  if (loginForm) {
+    loginForm.onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!username || !password) {
+        if (loginError) loginError.textContent = 'Kullanıcı adı ve şifre gerekli';
+        return;
+      }
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          closeAuthModal();
+          checkUserStatus();
+        } else {
+          if (loginError) loginError.textContent = data.error || 'Giriş başarısız';
+        }
+      });
+    };
+  }
+  // Kayıt formu
+  if (registerForm) {
+    registerForm.onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('register-username').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value;
+      if (!username || !email || !password) {
+        if (registerError) registerError.textContent = 'Tüm alanlar gerekli';
+        return;
+      }
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          // Kayıt başarılı, login tabına geç
+          openAuthModal('login');
+          if (registerError) registerError.textContent = 'Kayıt başarılı, şimdi giriş yapabilirsiniz.';
+        } else {
+          if (registerError) registerError.textContent = data.error || 'Kayıt başarısız';
+        }
+      });
+    };
+  }
+
+  // Kullanıcı durumu kontrolü ve üstte gösterme
+  function checkUserStatus() {
+    fetch('/api/user')
+      .then(r => r.json())
+      .then(data => {
+        let userBar = document.getElementById('user-bar');
+        if (!userBar) {
+          userBar = document.createElement('div');
+          userBar.id = 'user-bar';
+          userBar.style.position = 'absolute';
+          userBar.style.top = '10px';
+          userBar.style.right = '180px';
+          userBar.style.zIndex = '1001';
+          userBar.style.background = 'var(--vscode-accent)';
+          userBar.style.color = '#fff';
+          userBar.style.padding = '6px 16px';
+          userBar.style.borderRadius = '20px';
+          userBar.style.fontSize = '1em';
+          userBar.style.display = 'flex';
+          userBar.style.alignItems = 'center';
+          userBar.style.gap = '10px';
+          document.body.appendChild(userBar);
+        }
+        if (data.logged_in) {
+          userBar.innerHTML = `<i class='fa-solid fa-user'></i> ${data.username} <button id='logout-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:2px 12px;cursor:pointer;font-size:0.95em;'>Çıkış</button>`;
+          const logoutBtn = document.getElementById('logout-btn');
+          if (logoutBtn) {
+            logoutBtn.onclick = function() {
+              fetch('/api/logout', { method: 'POST' })
+                .then(r => r.json())
+                .then(() => {
+                  checkUserStatus();
+                });
+            };
+          }
+        } else {
+          userBar.innerHTML = `<button id='open-auth-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:2px 12px;cursor:pointer;font-size:0.95em;'><i class='fa-solid fa-user'></i> Giriş/Kayıt</button>`;
+          const openAuthBtn = document.getElementById('open-auth-btn');
+          if (openAuthBtn) openAuthBtn.onclick = () => openAuthModal('login');
+        }
+      });
+  }
+  checkUserStatus();
+
 }); 

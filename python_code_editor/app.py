@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, render_template, after_this_request
+from flask import Flask, request, jsonify, send_from_directory, render_template, after_this_request, session, redirect, url_for
 from flask_cors import CORS
 import os
 import subprocess
@@ -11,6 +11,8 @@ import base64
 import openai
 import anthropic
 import google.generativeai as genai
+from werkzeug.security import generate_password_hash, check_password_hash
+import sqlite3
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
@@ -388,6 +390,76 @@ def ai_agent():
 
     except Exception as e:
         return jsonify({'error': f'AI API hatası: {str(e)}'}), 500
+
+# Kullanıcı veritabanı (SQLite)
+DB_PATH = os.path.join(os.path.dirname(__file__), 'users.db')
+
+def init_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )''')
+        conn.commit()
+init_db()
+
+# Kullanıcı kaydı
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    if not username or not email or not password:
+        return jsonify({'error': 'Tüm alanlar gerekli'}), 400
+    hashed_pw = generate_password_hash(password)
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            c = conn.cursor()
+            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, hashed_pw))
+            conn.commit()
+        return jsonify({'success': True, 'message': 'Kayıt başarılı'})
+    except sqlite3.IntegrityError:
+        return jsonify({'error': 'Kullanıcı adı veya e-posta zaten kayıtlı'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Kullanıcı girişi
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if not username or not password:
+        return jsonify({'error': 'Kullanıcı adı ve şifre gerekli'}), 400
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('SELECT id, password FROM users WHERE username=? OR email=?', (username, username))
+        row = c.fetchone()
+        if not row:
+            return jsonify({'error': 'Kullanıcı bulunamadı'}), 400
+        user_id, hashed_pw = row
+        if not check_password_hash(hashed_pw, password):
+            return jsonify({'error': 'Şifre yanlış'}), 400
+        session['user_id'] = user_id
+        session['username'] = username
+        return jsonify({'success': True, 'message': 'Giriş başarılı'})
+
+# Çıkış
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'success': True, 'message': 'Çıkış yapıldı'})
+
+# Giriş kontrolü (örnek korumalı endpoint)
+@app.route('/api/user', methods=['GET'])
+def get_user():
+    if 'user_id' not in session:
+        return jsonify({'logged_in': False})
+    return jsonify({'logged_in': True, 'username': session.get('username')})
 
 # Diğer endpointler eklenecek...
 
