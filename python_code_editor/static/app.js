@@ -824,7 +824,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'Find in All Tabs',
       foundNoneTabs: 'No matches found in any tab',
       replacedCountTabs: '{n} replaced',
-      replacedNoneTabs: 'No replacements made in any tab'
+      replacedNoneTabs: 'No replacements made in any tab',
+      loginUsername: 'Username or email',
+      loginPassword: 'Password',
+      loginBtn: 'Login',
+      registerUsername: 'Username',
+      registerEmail: 'Email',
+      registerPassword: 'Password',
+      registerFullname: 'Full Name',
+      registerBirthdate: 'Birth Date',
+      registerPasswordConfirm: 'Confirm Password',
+      registerBtn: 'Register',
+      loginTab: 'Login',
+      registerTab: 'Register',
+      loginError: 'Username and password required',
+      registerError: 'All fields required',
+      passwordMismatch: 'Passwords do not match',
+      userBarLogin: 'Register-Login',
+      userBarLogout: 'Logout',
     },
     tr: {
       save: 'Kaydet',
@@ -860,7 +877,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'Tüm Sekmelerde Bul',
       foundNoneTabs: 'Hiçbir sekmede eşleşme bulunamadı',
       replacedCountTabs: '{n} değiştirildi',
-      replacedNoneTabs: 'Hiçbir sekmede değiştirme yapıldı'
+      replacedNoneTabs: 'Hiçbir sekmede değiştirme yapıldı',
+      loginUsername: 'Kullanıcı adı veya e-posta',
+      loginPassword: 'Şifre',
+      loginBtn: 'Giriş Yap',
+      registerUsername: 'Kullanıcı adı',
+      registerEmail: 'E-posta',
+      registerPassword: 'Şifre',
+      registerFullname: 'Ad Soyad',
+      registerBirthdate: 'Doğum Tarihi',
+      registerPasswordConfirm: 'Şifre Tekrarı',
+      registerBtn: 'Kayıt Ol',
+      loginTab: 'Giriş Yap',
+      registerTab: 'Kayıt Ol',
+      loginError: 'Kullanıcı adı ve şifre gerekli',
+      registerError: 'Tüm alanlar gerekli',
+      passwordMismatch: 'Şifreler eşleşmiyor',
+      userBarLogin: 'Kayıt Ol-Giriş Yap',
+      userBarLogout: 'Çıkış',
     },
     de: {
       save: 'Speichern',
@@ -896,7 +930,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'In allen Registerkarten suchen',
       foundNoneTabs: 'Keine Übereinstimmungen in irgendeiner Registerkarte gefunden',
       replacedCountTabs: '{n} ersetzt',
-      replacedNoneTabs: 'In keiner Registerkarte wurde ersetzt'
+      replacedNoneTabs: 'In keiner Registerkarte wurde ersetzt',
+      loginUsername: 'Benutzername oder E-Mail',
+      loginPassword: 'Passwort',
+      loginBtn: 'Anmelden',
+      registerUsername: 'Benutzername',
+      registerEmail: 'E-Mail',
+      registerPassword: 'Passwort',
+      registerFullname: 'Vollständiger Name',
+      registerBirthdate: 'Geburtsdatum',
+      registerPasswordConfirm: 'Passwort bestätigen',
+      registerBtn: 'Registrieren',
+      loginTab: 'Anmelden',
+      registerTab: 'Registrieren',
+      loginError: 'Benutzername und Passwort erforderlich',
+      registerError: 'Alle Felder erforderlich',
+      passwordMismatch: 'Passwörter stimmen nicht überein',
+      userBarLogin: 'Registrieren-Anmelden',
+      userBarLogout: 'Abmelden',
     },
     fr: {
       save: 'Enregistrer',
@@ -932,7 +983,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'Rechercher dans toutes les onglets',
       foundNoneTabs: 'Aucune correspondance trouvée dans aucun onglet',
       replacedCountTabs: '{n} remplacés',
-      replacedNoneTabs: 'Aucun remplacement effectué dans aucun onglet'
+      replacedNoneTabs: 'Aucun remplacement effectué dans aucun onglet',
+      loginUsername: "Nom d'utilisateur ou e-mail",
+      loginPassword: 'Mot de passe',
+      loginBtn: 'Connexion',
+      registerUsername: "Nom d'utilisateur",
+      registerEmail: 'E-mail',
+      registerPassword: 'Mot de passe',
+      registerFullname: 'Nom complet',
+      registerBirthdate: 'Date de naissance',
+      registerPasswordConfirm: 'Confirmer le mot de passe',
+      registerBtn: "S'inscrire",
+      loginTab: 'Connexion',
+      registerTab: "S'inscrire",
+      loginError: "Nom d'utilisateur et mot de passe requis",
+      registerError: 'Tous les champs sont requis',
+      passwordMismatch: 'Les mots de passe ne correspondent pas',
+      userBarLogin: "S'inscrire-Connexion",
+      userBarLogout: 'Déconnexion',
     },
     es: {
       save: 'Guardar',
@@ -968,7 +1036,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'Buscar en todas las pestañas',
       foundNoneTabs: 'Ninguna coincidencia encontrada en ninguna pestaña',
       replacedCountTabs: '{n} reemplazado',
-      replacedNoneTabs: 'Ningún reemplazo realizado en ninguna pestaña'
+      replacedNoneTabs: 'Ningún reemplazo realizado en ninguna pestaña',
+      loginUsername: 'Usuario o correo',
+      loginPassword: 'Contraseña',
+      loginBtn: 'Iniciar sesión',
+      registerUsername: 'Usuario',
+      registerEmail: 'Correo',
+      registerPassword: 'Contraseña',
+      registerFullname: 'Nombre completo',
+      registerBirthdate: 'Fecha de nacimiento',
+      registerPasswordConfirm: 'Confirmar contraseña',
+      registerBtn: 'Registrarse',
+      loginTab: 'Iniciar sesión',
+      registerTab: 'Registrarse',
+      loginError: 'Usuario y contraseña requeridos',
+      registerError: 'Todos los campos son obligatorios',
+      passwordMismatch: 'Las contraseñas no coinciden',
+      userBarLogin: 'Registrarse-Iniciar sesión',
+      userBarLogout: 'Cerrar sesión',
     },
     hi: {
       save: 'सहेजें',
@@ -1004,7 +1089,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: 'सभी टैब्स में खोजें',
       foundNoneTabs: 'कोई मिलान नहीं मिला किसी भी टैब में',
       replacedCountTabs: '{n} बदलें',
-      replacedNoneTabs: 'कोई बदलाव नहीं किया गया किसी भी टैब में'
+      replacedNoneTabs: 'कोई बदलाव नहीं किया गया किसी भी टैब में',
+      loginUsername: 'यूज़रनेम या ईमेल',
+      loginPassword: 'पासवर्ड',
+      loginBtn: 'लॉगिन',
+      registerUsername: 'यूज़रनेम',
+      registerEmail: 'ईमेल',
+      registerPassword: 'पासवर्ड',
+      registerFullname: 'पूरा नाम',
+      registerBirthdate: 'जन्म तिथि',
+      registerPasswordConfirm: 'पासवर्ड की पुष्टि करें',
+      registerBtn: 'रजिस्टर',
+      loginTab: 'लॉगिन',
+      registerTab: 'रजिस्टर',
+      loginError: 'यूज़रनेम और पासवर्ड आवश्यक',
+      registerError: 'सभी फ़ील्ड आवश्यक हैं',
+      passwordMismatch: 'पासवर्ड मेल नहीं खाते',
+      userBarLogin: 'रजिस्टर-लॉगिन',
+      userBarLogout: 'लॉगआउट',
     },
     zh: {
       save: '保存',
@@ -1040,7 +1142,24 @@ window.addEventListener('DOMContentLoaded', function() {
       findAllTabsBtn: '在所有标签页中查找',
       foundNoneTabs: '未找到任何标签页中的匹配项',
       replacedCountTabs: '{n} 替换',
-      replacedNoneTabs: '未在任何标签页中进行替换'
+      replacedNoneTabs: '未在任何标签页中进行替换',
+      loginUsername: '用户名或邮箱',
+      loginPassword: '密码',
+      loginBtn: '登录',
+      registerUsername: '用户名',
+      registerEmail: '邮箱',
+      registerPassword: '密码',
+      registerFullname: '姓名',
+      registerBirthdate: '出生日期',
+      registerPasswordConfirm: '确认密码',
+      registerBtn: '注册',
+      loginTab: '登录',
+      registerTab: '注册',
+      loginError: '用户名和密码必填',
+      registerError: '所有字段必填',
+      passwordMismatch: '密码不匹配',
+      userBarLogin: '注册-登录',
+      userBarLogout: '退出',
     }
   };
   window.translations = translations;
@@ -1128,6 +1247,34 @@ window.addEventListener('DOMContentLoaded', function() {
     if (replaceAllBtn) replaceAllBtn.textContent = t.replaceAllBtn;
     
     attachActivityBtnHandlers();
+    // Kullanıcı barı çevirileri (varsa)
+    checkUserStatus(); // Çeviri güncellendikten sonra barı güncelle
+
+    // Auth modal çevirileri
+    const loginUsername = document.getElementById('login-username');
+    const loginPassword = document.getElementById('login-password');
+    const loginBtn = document.getElementById('login-btn');
+    const registerUsername = document.getElementById('register-username');
+          const registerEmail = document.getElementById('register-email');
+      const registerPassword = document.getElementById('register-password');
+      const registerFullname = document.getElementById('register-fullname');
+      const registerBirthdate = document.getElementById('register-birthdate');
+      const registerPasswordConfirm = document.getElementById('register-password-confirm');
+      const registerBtn = document.getElementById('register-btn');
+      const authLoginTab = document.getElementById('auth-login-tab');
+    const authRegisterTab = document.getElementById('auth-register-tab');
+    if (loginUsername) loginUsername.placeholder = t.loginUsername;
+    if (loginPassword) loginPassword.placeholder = t.loginPassword;
+    if (loginBtn) loginBtn.textContent = t.loginBtn;
+    if (registerUsername) registerUsername.placeholder = t.registerUsername;
+          if (registerEmail) registerEmail.placeholder = t.registerEmail;
+      if (registerPassword) registerPassword.placeholder = t.registerPassword;
+      if (registerFullname) registerFullname.placeholder = t.registerFullname;
+      if (registerBirthdate) registerBirthdate.placeholder = t.registerBirthdate;
+      if (registerPasswordConfirm) registerPasswordConfirm.placeholder = t.registerPasswordConfirm;
+      if (registerBtn) registerBtn.textContent = t.registerBtn;
+      if (authLoginTab) authLoginTab.textContent = t.loginTab;
+    if (authRegisterTab) authRegisterTab.textContent = t.registerTab;
   }
 
   // Dil seçici ve otomatik uygulama
@@ -1356,13 +1503,14 @@ window.addEventListener('DOMContentLoaded', function() {
   // Modal aç/kapa fonksiyonları
   function openAuthModal(tab = 'login') {
     if (authModal) authModal.style.display = 'flex';
+    // Sekme aktifliğini ve stilleri güncelle
+    if (authLoginTab) authLoginTab.classList.remove('active');
+    if (authRegisterTab) authRegisterTab.classList.remove('active');
     if (tab === 'login') {
       if (authLoginTab) authLoginTab.classList.add('active');
-      if (authRegisterTab) authRegisterTab.classList.remove('active');
       if (loginForm) loginForm.style.display = 'block';
       if (registerForm) registerForm.style.display = 'none';
     } else {
-      if (authLoginTab) authLoginTab.classList.remove('active');
       if (authRegisterTab) authRegisterTab.classList.add('active');
       if (loginForm) loginForm.style.display = 'none';
       if (registerForm) registerForm.style.display = 'block';
@@ -1374,8 +1522,16 @@ window.addEventListener('DOMContentLoaded', function() {
     if (authModal) authModal.style.display = 'none';
   }
   if (authModalClose) authModalClose.onclick = closeAuthModal;
-  if (authLoginTab) authLoginTab.onclick = () => openAuthModal('login');
-  if (authRegisterTab) authRegisterTab.onclick = () => openAuthModal('register');
+  if (authLoginTab) authLoginTab.onclick = () => {
+    openAuthModal('login');
+    if (authLoginTab) authLoginTab.classList.add('active');
+    if (authRegisterTab) authRegisterTab.classList.remove('active');
+  };
+  if (authRegisterTab) authRegisterTab.onclick = () => {
+    openAuthModal('register');
+    if (authLoginTab) authLoginTab.classList.remove('active');
+    if (authRegisterTab) authRegisterTab.classList.add('active');
+  };
   // Modal dışında tıklayınca kapat
   if (authModal) {
     authModal.addEventListener('click', function(e) {
@@ -1389,8 +1545,12 @@ window.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
       const password = document.getElementById('login-password').value;
+      const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
       if (!username || !password) {
-        if (loginError) loginError.textContent = 'Kullanıcı adı ve şifre gerekli';
+        if (loginError) {
+          loginError.textContent = t.loginError;
+          loginError.classList.add('has-error');
+        }
         return;
       }
       fetch('/api/login', {
@@ -1404,65 +1564,126 @@ window.addEventListener('DOMContentLoaded', function() {
           closeAuthModal();
           checkUserStatus();
         } else {
-          if (loginError) loginError.textContent = data.error || 'Giriş başarısız';
+          if (loginError) {
+            loginError.textContent = data.error || t.loginError;
+            loginError.classList.add('has-error');
+          }
         }
       });
     };
   }
-  // Kayıt formu
   if (registerForm) {
     registerForm.onsubmit = function(e) {
       e.preventDefault();
       const username = document.getElementById('register-username').value.trim();
+      const fullname = document.getElementById('register-fullname').value.trim();
+      const birthdate = document.getElementById('register-birthdate').value;
       const email = document.getElementById('register-email').value.trim();
       const password = document.getElementById('register-password').value;
+      const passwordConfirm = document.getElementById('register-password-confirm').value;
+      const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
+      
       if (!username || !email || !password) {
-        if (registerError) registerError.textContent = 'Tüm alanlar gerekli';
+        if (registerError) {
+          registerError.textContent = t.registerError;
+          registerError.classList.add('has-error');
+        }
         return;
       }
+      
+      if (password !== passwordConfirm) {
+        if (registerError) {
+          registerError.textContent = t.passwordMismatch || 'Şifreler eşleşmiyor';
+          registerError.classList.add('has-error');
+        }
+        return;
+      }
+      
       fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, fullname, birthdate, password, password_confirm: passwordConfirm })
       })
       .then(r => r.json())
       .then(data => {
         if (data.success) {
-          // Kayıt başarılı, login tabına geç
           openAuthModal('login');
-          if (registerError) registerError.textContent = 'Kayıt başarılı, şimdi giriş yapabilirsiniz.';
+          if (registerError) {
+            registerError.textContent = t.registerSuccess || 'Kayıt başarılı, şimdi giriş yapabilirsiniz.';
+            registerError.classList.add('has-error');
+          }
         } else {
-          if (registerError) registerError.textContent = data.error || 'Kayıt başarısız';
+          if (registerError) {
+            registerError.textContent = data.error || t.registerError;
+            registerError.classList.add('has-error');
+          }
         }
       });
     };
   }
+  // Sekme değişiminde hata mesajlarını gizle
+  function hideAuthErrors() {
+    if (loginError) { loginError.textContent = ''; loginError.classList.remove('has-error'); loginError.style.display = 'none'; }
+    if (registerError) { registerError.textContent = ''; registerError.classList.remove('has-error'); registerError.style.display = 'none'; }
+  }
+  if (authLoginTab) authLoginTab.addEventListener('click', hideAuthErrors);
+  if (authRegisterTab) authRegisterTab.addEventListener('click', hideAuthErrors);
+
+  // Hata mesajı varsa göster, yoksa gizle
+  function showError(div, msg) {
+    if (div) {
+      if (msg) {
+        div.textContent = msg;
+        div.classList.add('has-error');
+        div.style.display = 'block';
+      } else {
+        div.textContent = '';
+        div.classList.remove('has-error');
+        div.style.display = 'none';
+      }
+    }
+  }
 
   // Kullanıcı durumu kontrolü ve üstte gösterme
   function checkUserStatus() {
+    // En güncel çeviri anahtarını al
+    const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
+    // Header ve kaydet butonunu bul
+    const vsHeader = document.getElementById('vs-header');
+    const saveBtn = document.getElementById('save-btn');
+    let userBar = document.getElementById('user-bar');
+    // user-bar yoksa oluştur ve header'a ekle
+    if (!userBar) {
+      userBar = document.createElement('div');
+      userBar.id = 'user-bar';
+      userBar.style.background = 'var(--vscode-accent)';
+      userBar.style.color = '#fff';
+      userBar.style.padding = '6px 16px';
+      userBar.style.borderRadius = '20px';
+      userBar.style.fontSize = '1em';
+      userBar.style.display = 'flex';
+      userBar.style.alignItems = 'center';
+      userBar.style.gap = '10px';
+      userBar.style.marginLeft = '16px';
+      userBar.style.position = 'static';
+      if (saveBtn && vsHeader) {
+        vsHeader.insertBefore(userBar, saveBtn);
+      } else if (vsHeader) {
+        vsHeader.appendChild(userBar);
+      } else {
+        document.body.appendChild(userBar);
+      }
+    }
+    // Her durumda içeriği temizle
+    userBar.innerHTML = '';
+    // Kullanıcı durumunu API'den al
     fetch('/api/user')
       .then(r => r.json())
       .then(data => {
-        let userBar = document.getElementById('user-bar');
-        if (!userBar) {
-          userBar = document.createElement('div');
-          userBar.id = 'user-bar';
-          userBar.style.position = 'absolute';
-          userBar.style.top = '10px';
-          userBar.style.right = '180px';
-          userBar.style.zIndex = '1001';
-          userBar.style.background = 'var(--vscode-accent)';
-          userBar.style.color = '#fff';
-          userBar.style.padding = '6px 16px';
-          userBar.style.borderRadius = '20px';
-          userBar.style.fontSize = '1em';
-          userBar.style.display = 'flex';
-          userBar.style.alignItems = 'center';
-          userBar.style.gap = '10px';
-          document.body.appendChild(userBar);
-        }
+        userBar.innerHTML = '';
         if (data.logged_in) {
-          userBar.innerHTML = `<i class='fa-solid fa-user'></i> ${data.username} <button id='logout-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:2px 12px;cursor:pointer;font-size:0.95em;'>Çıkış</button>`;
+          userBar.innerHTML = `<i class='fa-solid fa-user'></i> <span style='margin-right:8px;'>${data.username}</span>
+            <button id='logout-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:4px 16px;min-width:70px;cursor:pointer;font-size:0.95em;'>${t.userBarLogout}</button>`;
           const logoutBtn = document.getElementById('logout-btn');
           if (logoutBtn) {
             logoutBtn.onclick = function() {
@@ -1474,12 +1695,27 @@ window.addEventListener('DOMContentLoaded', function() {
             };
           }
         } else {
-          userBar.innerHTML = `<button id='open-auth-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:2px 12px;cursor:pointer;font-size:0.95em;'><i class='fa-solid fa-user'></i> Giriş/Kayıt</button>`;
+          userBar.innerHTML = `<button id='open-auth-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:4px 16px;min-width:110px;cursor:pointer;font-size:0.95em;'><i class='fa-solid fa-user'></i> ${t.userBarLogin}</button>`;
           const openAuthBtn = document.getElementById('open-auth-btn');
           if (openAuthBtn) openAuthBtn.onclick = () => openAuthModal('login');
         }
       });
   }
   checkUserStatus();
+
+  // Sosyal giriş butonları
+  const googleLoginBtn = document.getElementById('google-login-btn');
+  const appleLoginBtn = document.getElementById('apple-login-btn');
+  const githubLoginBtn = document.getElementById('github-login-btn');
+
+  if (googleLoginBtn) googleLoginBtn.onclick = function() {
+    window.location.href = '/auth/google';
+  };
+  if (appleLoginBtn) appleLoginBtn.onclick = function() {
+    window.location.href = '/auth/apple';
+  };
+  if (githubLoginBtn) githubLoginBtn.onclick = function() {
+    window.location.href = '/auth/github';
+  };
 
 }); 

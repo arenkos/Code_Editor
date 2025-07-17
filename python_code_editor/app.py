@@ -13,6 +13,8 @@ import anthropic
 import google.generativeai as genai
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.contrib.github import make_github_blueprint, github
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
@@ -401,6 +403,8 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
+            fullname TEXT,
+            birthdate TEXT,
             password TEXT NOT NULL
         )''')
         conn.commit()
@@ -412,14 +416,23 @@ def register():
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
+    fullname = data.get('fullname')
+    birthdate = data.get('birthdate')
     password = data.get('password')
+    password_confirm = data.get('password_confirm')
+    
     if not username or not email or not password:
-        return jsonify({'error': 'Tüm alanlar gerekli'}), 400
+        return jsonify({'error': 'Kullanıcı adı, e-posta ve şifre gerekli'}), 400
+    
+    if password != password_confirm:
+        return jsonify({'error': 'Şifreler eşleşmiyor'}), 400
+    
     hashed_pw = generate_password_hash(password)
     try:
         with sqlite3.connect(DB_PATH) as conn:
             c = conn.cursor()
-            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, hashed_pw))
+            c.execute('INSERT INTO users (username, email, fullname, birthdate, password) VALUES (?, ?, ?, ?, ?)', 
+                     (username, email, fullname, birthdate, hashed_pw))
             conn.commit()
         return jsonify({'success': True, 'message': 'Kayıt başarılı'})
     except sqlite3.IntegrityError:
@@ -460,6 +473,86 @@ def get_user():
     if 'user_id' not in session:
         return jsonify({'logged_in': False})
     return jsonify({'logged_in': True, 'username': session.get('username')})
+
+# --- OAUTH (Google, GitHub) ---
+# Not: Client ID/Secret değerlerini kendi uygulamanızdan almalısınız!
+app.config['OAUTHLIB_INSECURE_TRANSPORT'] = True  # Sadece geliştirme için!
+
+google_bp = make_google_blueprint(
+    client_id="GOOGLE_CLIENT_ID",
+    client_secret="GOOGLE_CLIENT_SECRET",
+    scope=["profile", "email"],
+    redirect_url="/auth/google/callback"
+)
+github_bp = make_github_blueprint(
+    client_id="GITHUB_CLIENT_ID",
+    client_secret="GITHUB_CLIENT_SECRET",
+    scope="user:email",
+    redirect_url="/auth/github/callback"
+)
+app.register_blueprint(google_bp, url_prefix="/auth/google")
+app.register_blueprint(github_bp, url_prefix="/auth/github")
+
+# Google OAuth callback
+@app.route('/auth/google/callback')
+def google_auth_callback():
+    if not google.authorized:
+        return redirect(url_for('google.login'))
+    resp = google.get('/oauth2/v2/userinfo')
+    if not resp.ok:
+        return redirect('/')
+    info = resp.json()
+    email = info.get('email')
+    username = info.get('name') or email.split('@')[0]
+    # Kullanıcıyı veritabanında bul veya oluştur
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('SELECT id FROM users WHERE email=?', (email,))
+        row = c.fetchone()
+        if not row:
+            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
+            conn.commit()
+            user_id = c.lastrowid
+        else:
+            user_id = row[0]
+    session['user_id'] = user_id
+    session['username'] = username
+    return redirect('/')
+
+# GitHub OAuth callback
+@app.route('/auth/github/callback')
+def github_auth_callback():
+    if not github.authorized:
+        return redirect(url_for('github.login'))
+    resp = github.get('/user')
+    if not resp.ok:
+        return redirect('/')
+    info = resp.json()
+    username = info.get('login')
+    # E-posta almak için ayrı istek
+    email = None
+    emails_resp = github.get('/user/emails')
+    if emails_resp.ok:
+        emails = emails_resp.json()
+        for e in emails:
+            if e.get('primary'):
+                email = e.get('email')
+                break
+    if not email:
+        email = username + '@github.com'
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('SELECT id FROM users WHERE email=?', (email,))
+        row = c.fetchone()
+        if not row:
+            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
+            conn.commit()
+            user_id = c.lastrowid
+        else:
+            user_id = row[0]
+    session['user_id'] = user_id
+    session['username'] = username
+    return redirect('/')
 
 # Diğer endpointler eklenecek...
 
