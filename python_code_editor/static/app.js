@@ -1681,23 +1681,57 @@ window.addEventListener('DOMContentLoaded', function() {
       .then(r => r.json())
       .then(data => {
         userBar.innerHTML = '';
+        // Üyelik Planları linki
+        const planLink = document.createElement('a');
+        planLink.href = '/pricing';
+        planLink.id = 'pricing-link';
+        planLink.innerHTML = "<i class='fa-solid fa-crown'></i> Üyelik Planları";
+        planLink.style.background = '#fff';
+        planLink.style.color = 'var(--vscode-accent)';
+        planLink.style.border = 'none';
+        planLink.style.borderRadius = '12px';
+        planLink.style.padding = '4px 16px';
+        planLink.style.minWidth = '110px';
+        planLink.style.cursor = 'pointer';
+        planLink.style.fontSize = '0.95em';
+        planLink.style.textDecoration = 'none';
+        planLink.style.marginRight = '8px';
+        userBar.appendChild(planLink);
         if (data.logged_in) {
-          userBar.innerHTML = `<i class='fa-solid fa-user'></i> <span style='margin-right:8px;'>${data.username}</span>
-            <button id='logout-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:4px 16px;min-width:70px;cursor:pointer;font-size:0.95em;'>${t.userBarLogout}</button>`;
-          const logoutBtn = document.getElementById('logout-btn');
-          if (logoutBtn) {
-            logoutBtn.onclick = function() {
-              fetch('/api/logout', { method: 'POST' })
-                .then(r => r.json())
-                .then(() => {
-                  checkUserStatus();
-                });
-            };
-          }
+          userBar.innerHTML += `<i class='fa-solid fa-user'></i> <span style='margin-right:8px;'>${data.username}</span>`;
+          const logoutBtn = document.createElement('button');
+          logoutBtn.id = 'logout-btn';
+          logoutBtn.textContent = t.userBarLogout;
+          logoutBtn.style.background = '#fff';
+          logoutBtn.style.color = 'var(--vscode-accent)';
+          logoutBtn.style.border = 'none';
+          logoutBtn.style.borderRadius = '12px';
+          logoutBtn.style.padding = '4px 16px';
+          logoutBtn.style.minWidth = '70px';
+          logoutBtn.style.cursor = 'pointer';
+          logoutBtn.style.fontSize = '0.95em';
+          userBar.appendChild(logoutBtn);
+          logoutBtn.onclick = function() {
+            fetch('/api/logout', { method: 'POST' })
+              .then(r => r.json())
+              .then(() => {
+                checkUserStatus();
+              });
+          };
         } else {
-          userBar.innerHTML = `<button id='open-auth-btn' style='background:#fff;color:var(--vscode-accent);border:none;border-radius:12px;padding:4px 16px;min-width:110px;cursor:pointer;font-size:0.95em;'><i class='fa-solid fa-user'></i> ${t.userBarLogin}</button>`;
-          const openAuthBtn = document.getElementById('open-auth-btn');
-          if (openAuthBtn) openAuthBtn.onclick = () => openAuthModal('login');
+          const openAuthBtn = document.createElement('button');
+          openAuthBtn.id = 'open-auth-btn';
+          openAuthBtn.innerHTML = `<i class='fa-solid fa-user'></i> ${t.userBarLogin}`;
+          openAuthBtn.style.background = '#fff';
+          openAuthBtn.style.color = 'var(--vscode-accent)';
+          openAuthBtn.style.border = 'none';
+          openAuthBtn.style.borderRadius = '12px';
+          openAuthBtn.style.padding = '4px 16px';
+          openAuthBtn.style.minWidth = '110px';
+          openAuthBtn.style.cursor = 'pointer';
+          openAuthBtn.style.fontSize = '0.95em';
+          userBar.appendChild(openAuthBtn);
+          openAuthBtn.onclick = () => openAuthModal('login');
         }
       });
   }

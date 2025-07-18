@@ -15,6 +15,30 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.contrib.github import make_github_blueprint, github
+from functools import wraps
+
+# Paket kontrolü için decorator
+PACKAGE_MAP = {
+    'ai_basic': ['ai_basic'],
+    'ai_pro': ['ai_pro', 'ai_pro_server', 'ai_unlimited', 'ai_unlimited_server'],
+    'ai_unlimited': ['ai_unlimited', 'ai_unlimited_server'],
+    'server': ['server', 'ai_pro_server', 'ai_unlimited_server'],
+    'ai_pro_server': ['ai_pro_server'],
+    'ai_unlimited_server': ['ai_unlimited_server']
+}
+
+def require_package(*allowed_packages):
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            user_package = session.get('package', 'basic')
+            # Kombin paketler için
+            for allowed in allowed_packages:
+                if user_package in PACKAGE_MAP.get(allowed, [allowed]):
+                    return f(*args, **kwargs)
+            return jsonify({'error': 'Bu hizmete erişim için uygun pakete sahip değilsiniz.'}), 403
+        return wrapper
+    return decorator
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 CORS(app)
@@ -120,7 +144,102 @@ def save_file():
     except Exception as e:
         return jsonify({'error': 'Dosya kaydedilemedi', 'message': str(e)}), 500
 
+# Admin: Kullanıcıya paket atama
+@app.route('/api/admin/set-package', methods=['POST'])
+def admin_set_package():
+    data = request.get_json()
+    username = data.get('username')
+    package = data.get('package')
+    if not username or not package:
+        return jsonify({'error': 'Kullanıcı adı ve paket gerekli'}), 400
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('UPDATE users SET package=? WHERE username=?', (package, username))
+        conn.commit()
+    return jsonify({'success': True, 'message': f'{username} kullanıcısının paketi {package} olarak güncellendi.'})
+
+# AI Agent endpointinde paket kontrolü örneği
+@app.route('/api/ai-agent', methods=['POST'])
+@require_package('ai_basic', 'ai_pro', 'ai_unlimited', 'ai_pro_server', 'ai_unlimited_server')
+def ai_agent():
+    data = request.json
+    message = data.get('message', '')
+    file_path = data.get('file_path')
+    service_model = data.get('service', 'openai:gpt-4')
+    if ':' in service_model:
+        service, model = service_model.split(':', 1)
+    else:
+        service, model = service_model, ''
+    api_key = get_api_key(service, data.get('api_key'))
+    edit_mode = data.get('edit_mode', 'confirm')
+
+    # Dosya içeriği gerekiyorsa oku
+    file_content = None
+    if file_path:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_content = f.read()
+        except Exception as e:
+            return jsonify({'error': f'Dosya okunamadı: {str(e)}'}), 400
+
+    # Prompt hazırla
+    prompt = message
+    if file_content:
+        prompt += f"\n\nAşağıdaki dosya içeriğiyle ilgili işlem yap:\n{file_content}"
+
+    # Yanıtı al
+    try:
+        if service == "openai":
+            openai.api_key = api_key
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": "Sen bir kod editörü asistanısın."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=1024,
+                temperature=0.2
+            )
+            ai_reply = response['choices'][0]['message']['content']
+
+        elif service == "claude":
+            client = anthropic.Anthropic(api_key=api_key)
+            response = client.messages.create(
+                model=model,
+                max_tokens=1024,
+                temperature=0.2,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            ai_reply = response.content[0].text
+
+        elif service == "gemini":
+            genai.configure(api_key=api_key)
+            model_obj = genai.GenerativeModel(model)
+            response = model_obj.generate_content(prompt)
+            ai_reply = response.text
+
+        elif service == "copilot":
+            ai_reply = "Copilot API henüz desteklenmiyor. (Demo yanıt)"
+
+        else:
+            return jsonify({'error': 'Bilinmeyen AI servisi'}), 400
+
+        # Dosya düzenleme
+        if file_path and edit_mode == "auto":
+            try:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(ai_reply)
+            except Exception as e:
+                return jsonify({'error': f'Dosya yazılamadı: {str(e)}'}), 400
+
+        return jsonify({'reply': ai_reply})
+
+    except Exception as e:
+        return jsonify({'error': f'AI API hatası: {str(e)}'}), 500
+
+# Terminal endpointinde paket kontrolü örneği
 @app.route('/api/terminal', methods=['POST'])
+@require_package('server', 'ai_pro_server', 'ai_unlimited_server')
 def terminal():
     try:
         data = request.get_json()
@@ -316,83 +435,6 @@ def github_save():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/ai-agent', methods=['POST'])
-def ai_agent():
-    data = request.json
-    message = data.get('message', '')
-    file_path = data.get('file_path')
-    service_model = data.get('service', 'openai:gpt-4')
-    if ':' in service_model:
-        service, model = service_model.split(':', 1)
-    else:
-        service, model = service_model, ''
-    api_key = get_api_key(service, data.get('api_key'))
-    edit_mode = data.get('edit_mode', 'confirm')
-
-    # Dosya içeriği gerekiyorsa oku
-    file_content = None
-    if file_path:
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                file_content = f.read()
-        except Exception as e:
-            return jsonify({'error': f'Dosya okunamadı: {str(e)}'}), 400
-
-    # Prompt hazırla
-    prompt = message
-    if file_content:
-        prompt += f"\n\nAşağıdaki dosya içeriğiyle ilgili işlem yap:\n{file_content}"
-
-    # Yanıtı al
-    try:
-        if service == "openai":
-            openai.api_key = api_key
-            response = openai.ChatCompletion.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": "Sen bir kod editörü asistanısın."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=1024,
-                temperature=0.2
-            )
-            ai_reply = response['choices'][0]['message']['content']
-
-        elif service == "claude":
-            client = anthropic.Anthropic(api_key=api_key)
-            response = client.messages.create(
-                model=model,
-                max_tokens=1024,
-                temperature=0.2,
-                messages=[{"role": "user", "content": prompt}]
-            )
-            ai_reply = response.content[0].text
-
-        elif service == "gemini":
-            genai.configure(api_key=api_key)
-            model_obj = genai.GenerativeModel(model)
-            response = model_obj.generate_content(prompt)
-            ai_reply = response.text
-
-        elif service == "copilot":
-            ai_reply = "Copilot API henüz desteklenmiyor. (Demo yanıt)"
-
-        else:
-            return jsonify({'error': 'Bilinmeyen AI servisi'}), 400
-
-        # Dosya düzenleme
-        if file_path and edit_mode == "auto":
-            try:
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(ai_reply)
-            except Exception as e:
-                return jsonify({'error': f'Dosya yazılamadı: {str(e)}'}), 400
-
-        return jsonify({'reply': ai_reply})
-
-    except Exception as e:
-        return jsonify({'error': f'AI API hatası: {str(e)}'}), 500
-
 # Kullanıcı veritabanı (SQLite)
 DB_PATH = os.path.join(os.path.dirname(__file__), 'users.db')
 
@@ -405,7 +447,8 @@ def init_db():
             email TEXT UNIQUE NOT NULL,
             fullname TEXT,
             birthdate TEXT,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            package TEXT DEFAULT 'basic'
         )''')
         conn.commit()
 init_db()
@@ -420,6 +463,7 @@ def register():
     birthdate = data.get('birthdate')
     password = data.get('password')
     password_confirm = data.get('password_confirm')
+    package = data.get('package', 'basic')
     
     if not username or not email or not password:
         return jsonify({'error': 'Kullanıcı adı, e-posta ve şifre gerekli'}), 400
@@ -431,8 +475,8 @@ def register():
     try:
         with sqlite3.connect(DB_PATH) as conn:
             c = conn.cursor()
-            c.execute('INSERT INTO users (username, email, fullname, birthdate, password) VALUES (?, ?, ?, ?, ?)', 
-                     (username, email, fullname, birthdate, hashed_pw))
+            c.execute('INSERT INTO users (username, email, fullname, birthdate, password, package) VALUES (?, ?, ?, ?, ?, ?)', 
+                     (username, email, fullname, birthdate, hashed_pw, package))
             conn.commit()
         return jsonify({'success': True, 'message': 'Kayıt başarılı'})
     except sqlite3.IntegrityError:
@@ -450,16 +494,17 @@ def login():
         return jsonify({'error': 'Kullanıcı adı ve şifre gerekli'}), 400
     with sqlite3.connect(DB_PATH) as conn:
         c = conn.cursor()
-        c.execute('SELECT id, password FROM users WHERE username=? OR email=?', (username, username))
+        c.execute('SELECT id, password, package FROM users WHERE username=? OR email=?', (username, username))
         row = c.fetchone()
         if not row:
             return jsonify({'error': 'Kullanıcı bulunamadı'}), 400
-        user_id, hashed_pw = row
+        user_id, hashed_pw, package = row
         if not check_password_hash(hashed_pw, password):
             return jsonify({'error': 'Şifre yanlış'}), 400
         session['user_id'] = user_id
         session['username'] = username
-        return jsonify({'success': True, 'message': 'Giriş başarılı'})
+        session['package'] = package
+        return jsonify({'success': True, 'message': 'Giriş başarılı', 'package': package})
 
 # Çıkış
 @app.route('/api/logout', methods=['POST'])
@@ -610,6 +655,11 @@ def github_login():
     except Exception as e:
         print(f"GitHub OAuth login hatası: {e}")
         return jsonify({'error': 'GitHub OAuth hatası'}), 500
+
+# Fiyatlandırma/paketler sayfası
+@app.route('/pricing')
+def pricing():
+    return render_template('pricing.html')
 
 # Diğer endpointler eklenecek...
 
