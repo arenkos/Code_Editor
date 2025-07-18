@@ -2,4 +2,5 @@ Flask
 flask-cors 
 openai
 anthropic
-google-generativeai 
+google-generativeai
+Flask-Dance 

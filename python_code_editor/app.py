@@ -474,85 +474,142 @@ def get_user():
         return jsonify({'logged_in': False})
     return jsonify({'logged_in': True, 'username': session.get('username')})
 
-# --- OAUTH (Google, GitHub) ---
-# Not: Client ID/Secret değerlerini kendi uygulamanızdan almalısınız!
-app.config['OAUTHLIB_INSECURE_TRANSPORT'] = True  # Sadece geliştirme için!
+# OAuth durumu kontrolü
+@app.route('/api/oauth-status', methods=['GET'])
+def oauth_status():
+    google_enabled = bool(os.environ.get('GOOGLE_CLIENT_ID') and os.environ.get('GOOGLE_CLIENT_SECRET'))
+    github_enabled = bool(os.environ.get('GITHUB_CLIENT_ID') and os.environ.get('GITHUB_CLIENT_SECRET'))
+    return jsonify({
+        'google_enabled': google_enabled,
+        'github_enabled': github_enabled,
+        'secret_key_set': bool(os.environ.get('SECRET_KEY'))
+    })
 
-google_bp = make_google_blueprint(
-    client_id="GOOGLE_CLIENT_ID",
-    client_secret="GOOGLE_CLIENT_SECRET",
-    scope=["profile", "email"],
-    redirect_url="/auth/google/callback"
-)
-github_bp = make_github_blueprint(
-    client_id="GITHUB_CLIENT_ID",
-    client_secret="GITHUB_CLIENT_SECRET",
-    scope="user:email",
-    redirect_url="/auth/github/callback"
-)
-app.register_blueprint(google_bp, url_prefix="/auth/google")
-app.register_blueprint(github_bp, url_prefix="/auth/github")
+# --- OAUTH (Google, GitHub) ---
+# OAuth için gerekli ayarlar
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this')
+# Production'da HTTPS kullanıldığı için güvenli transport'u etkinleştir
+app.config['OAUTHLIB_INSECURE_TRANSPORT'] = False  # HTTPS kullanıyoruz
+
+# OAuth blueprint'lerini sadece environment variables varsa oluştur
+google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
+google_client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
+github_client_id = os.environ.get('GITHUB_CLIENT_ID')
+github_client_secret = os.environ.get('GITHUB_CLIENT_SECRET')
+
+if google_client_id and google_client_secret:
+    # Google OAuth Blueprint
+    google_bp = make_google_blueprint(
+        client_id=google_client_id,
+        client_secret=google_client_secret,
+        scope=["profile", "email"],
+        redirect_url="https://code.aryazilimdanismanlik.com/auth/google/google/authorized"
+    )
+    app.register_blueprint(google_bp, url_prefix="/auth/google")
+    print("Google OAuth blueprint kayıtlı")
+
+if github_client_id and github_client_secret:
+    # GitHub OAuth Blueprint  
+    github_bp = make_github_blueprint(
+        client_id=github_client_id,
+        client_secret=github_client_secret,
+        scope="user:email",
+        redirect_url="https://code.aryazilimdanismanlik.com/auth/github/github/authorized"
+    )
+    app.register_blueprint(github_bp, url_prefix="/auth/github")
+    print("GitHub OAuth blueprint kayıtlı")
 
 # Google OAuth callback
-@app.route('/auth/google/callback')
+@app.route('/auth/google/google/authorized')
 def google_auth_callback():
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-    resp = google.get('/oauth2/v2/userinfo')
-    if not resp.ok:
+    try:
+        if not google.authorized:
+            return redirect(url_for('google.login'))
+        resp = google.get('/oauth2/v2/userinfo')
+        if not resp.ok:
+            return redirect('/')
+        info = resp.json()
+        email = info.get('email')
+        username = info.get('name') or email.split('@')[0]
+        # Kullanıcıyı veritabanında bul veya oluştur
+        with sqlite3.connect(DB_PATH) as conn:
+            c = conn.cursor()
+            c.execute('SELECT id FROM users WHERE email=?', (email,))
+            row = c.fetchone()
+            if not row:
+                c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
+                conn.commit()
+                user_id = c.lastrowid
+            else:
+                user_id = row[0]
+        session['user_id'] = user_id
+        session['username'] = username
         return redirect('/')
-    info = resp.json()
-    email = info.get('email')
-    username = info.get('name') or email.split('@')[0]
-    # Kullanıcıyı veritabanında bul veya oluştur
-    with sqlite3.connect(DB_PATH) as conn:
-        c = conn.cursor()
-        c.execute('SELECT id FROM users WHERE email=?', (email,))
-        row = c.fetchone()
-        if not row:
-            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
-            conn.commit()
-            user_id = c.lastrowid
-        else:
-            user_id = row[0]
-    session['user_id'] = user_id
-    session['username'] = username
-    return redirect('/')
+    except Exception as e:
+        print(f"Google OAuth hatası: {e}")
+        return redirect('/')
 
 # GitHub OAuth callback
-@app.route('/auth/github/callback')
+@app.route('/auth/github/github/authorized')
 def github_auth_callback():
-    if not github.authorized:
-        return redirect(url_for('github.login'))
-    resp = github.get('/user')
-    if not resp.ok:
+    try:
+        if not github.authorized:
+            return redirect(url_for('github.login'))
+        resp = github.get('/user')
+        if not resp.ok:
+            return redirect('/')
+        info = resp.json()
+        username = info.get('login')
+        # E-posta almak için ayrı istek
+        email = None
+        emails_resp = github.get('/user/emails')
+        if emails_resp.ok:
+            emails = emails_resp.json()
+            for e in emails:
+                if e.get('primary'):
+                    email = e.get('email')
+                    break
+        if not email:
+            email = username + '@github.com'
+        with sqlite3.connect(DB_PATH) as conn:
+            c = conn.cursor()
+            c.execute('SELECT id FROM users WHERE email=?', (email,))
+            row = c.fetchone()
+            if not row:
+                c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
+                conn.commit()
+                user_id = c.lastrowid
+            else:
+                user_id = row[0]
+        session['user_id'] = user_id
+        session['username'] = username
         return redirect('/')
-    info = resp.json()
-    username = info.get('login')
-    # E-posta almak için ayrı istek
-    email = None
-    emails_resp = github.get('/user/emails')
-    if emails_resp.ok:
-        emails = emails_resp.json()
-        for e in emails:
-            if e.get('primary'):
-                email = e.get('email')
-                break
-    if not email:
-        email = username + '@github.com'
-    with sqlite3.connect(DB_PATH) as conn:
-        c = conn.cursor()
-        c.execute('SELECT id FROM users WHERE email=?', (email,))
-        row = c.fetchone()
-        if not row:
-            c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, generate_password_hash('oauth')))
-            conn.commit()
-            user_id = c.lastrowid
-        else:
-            user_id = row[0]
-    session['user_id'] = user_id
-    session['username'] = username
-    return redirect('/')
+    except Exception as e:
+        print(f"GitHub OAuth hatası: {e}")
+        return redirect('/')
+
+# OAuth Login Endpoints
+@app.route('/auth/google')
+def google_login():
+    if not google_client_id or not google_client_secret:
+        return jsonify({'error': 'Google OAuth yapılandırılmamış'}), 400
+    try:
+        # HTTPS kullanarak OAuth akışını başlat
+        return redirect(url_for('google.login', _scheme='https', _external=True))
+    except Exception as e:
+        print(f"Google OAuth login hatası: {e}")
+        return jsonify({'error': 'Google OAuth hatası'}), 500
+
+@app.route('/auth/github')
+def github_login():
+    if not github_client_id or not github_client_secret:
+        return jsonify({'error': 'GitHub OAuth yapılandırılmamış'}), 400
+    try:
+        # HTTPS kullanarak OAuth akışını başlat
+        return redirect(url_for('github.login', _scheme='https', _external=True))
+    except Exception as e:
+        print(f"GitHub OAuth login hatası: {e}")
+        return jsonify({'error': 'GitHub OAuth hatası'}), 500
 
 # Diğer endpointler eklenecek...
 

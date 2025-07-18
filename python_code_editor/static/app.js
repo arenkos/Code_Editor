@@ -1705,17 +1705,49 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Sosyal giriş butonları
   const googleLoginBtn = document.getElementById('google-login-btn');
-  const appleLoginBtn = document.getElementById('apple-login-btn');
   const githubLoginBtn = document.getElementById('github-login-btn');
 
-  if (googleLoginBtn) googleLoginBtn.onclick = function() {
-    window.location.href = '/auth/google';
-  };
-  if (appleLoginBtn) appleLoginBtn.onclick = function() {
-    window.location.href = '/auth/apple';
-  };
-  if (githubLoginBtn) githubLoginBtn.onclick = function() {
-    window.location.href = '/auth/github';
-  };
+  // OAuth durumunu kontrol et ve butonları ayarla
+  fetch('/api/oauth-status')
+    .then(r => r.json())
+    .then(data => {
+      if (googleLoginBtn) {
+        if (data.google_enabled) {
+          googleLoginBtn.onclick = function() {
+            window.location.href = '/auth/google';
+          };
+        } else {
+          googleLoginBtn.disabled = true;
+          googleLoginBtn.title = 'Google OAuth yapılandırılmamış';
+          googleLoginBtn.style.opacity = '0.5';
+        }
+      }
+      
+      if (githubLoginBtn) {
+        if (data.github_enabled) {
+          githubLoginBtn.onclick = function() {
+            window.location.href = '/auth/github';
+          };
+        } else {
+          githubLoginBtn.disabled = true;
+          githubLoginBtn.title = 'GitHub OAuth yapılandırılmamış';
+          githubLoginBtn.style.opacity = '0.5';
+        }
+      }
+    })
+    .catch(err => {
+      console.log('OAuth durumu kontrol edilemedi:', err);
+      // Hata durumunda butonları devre dışı bırak
+      if (googleLoginBtn) {
+        googleLoginBtn.disabled = true;
+        googleLoginBtn.title = 'Google OAuth yapılandırılmamış';
+        googleLoginBtn.style.opacity = '0.5';
+      }
+      if (githubLoginBtn) {
+        githubLoginBtn.disabled = true;
+        githubLoginBtn.title = 'GitHub OAuth yapılandırılmamış';
+        githubLoginBtn.style.opacity = '0.5';
+      }
+    });
 
 }); 
