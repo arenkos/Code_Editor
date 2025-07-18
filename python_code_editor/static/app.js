@@ -790,384 +790,551 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // --- DİL DESTEĞİ ---
   const translations = {
-    en: {
-      save: 'Save',
-      dark: 'Dark',
-      light: 'Light',
-      explorer: 'EXPLORER',
-      source: 'SOURCE CONTROL',
-      run: 'RUN & DEBUG',
-      extensions: 'EXTENSIONS',
-      uploadDir: 'Upload Directory',
-      githubOpen: 'Open from GitHub',
-      searchPlaceholder: 'Search in this folder...',
-      back: 'Go Up',
-      gitStatus: 'Git Status',
-      runBtn: 'Run',
-      runOnlyPy: 'Only a Python file can be run.',
-      terminal: 'Terminal',
-      terminalShow: 'Show Terminal',
-      terminalRun: 'Run',
-      aiAgent: 'AI Agent',
-      aiAsk: 'Ask something...',
-      saveStatus: 'Saved successfully',
-      autoSaved: 'Auto-saved:',
-      loading: 'Loading...',
-      working: 'Working...',
-      findPlaceholder: 'Find...',
-      replacePlaceholder: 'Replace...',
-      findBtn: 'Find',
-      replaceBtn: 'Replace',
-      replaceAllBtn: 'Replace All',
-      foundCount: '{n} found',
-      foundNone: 'No matches found',
-      findAllTabsBtn: 'Find in All Tabs',
-      foundNoneTabs: 'No matches found in any tab',
-      replacedCountTabs: '{n} replaced',
-      replacedNoneTabs: 'No replacements made in any tab',
-      loginUsername: 'Username or email',
-      loginPassword: 'Password',
-      loginBtn: 'Login',
-      registerUsername: 'Username',
-      registerEmail: 'Email',
-      registerPassword: 'Password',
-      registerFullname: 'Full Name',
-      registerBirthdate: 'Birth Date',
-      registerPasswordConfirm: 'Confirm Password',
-      registerBtn: 'Register',
-      loginTab: 'Login',
-      registerTab: 'Register',
-      loginError: 'Username and password required',
-      registerError: 'All fields required',
-      passwordMismatch: 'Passwords do not match',
-      userBarLogin: 'Register-Login',
-      userBarLogout: 'Logout',
-    },
     tr: {
       save: 'Kaydet',
+      userBarLogin: 'Kayıt Ol-Giriş Yap',
+      userBarLogout: 'Çıkış',
       dark: 'Koyu',
       light: 'Açık',
-      explorer: 'EXPLORER',
-      source: 'KAYNAK KONTROL',
-      run: 'ÇALIŞTIR',
-      extensions: 'EKLENTİLER',
+      explorer: 'Gezgin',
+      source: 'Kaynak Kontrolü',
+      run: 'Çalıştır & Hata Ayıklama',
+      extensions: 'Uzantılar',
       uploadDir: 'Dizin Yükle',
       githubOpen: 'GitHub\'dan Aç',
-      searchPlaceholder: 'Bu dizinde ara...',
-      back: 'Üst dizine çık',
+      back: 'Geri',
+      searchPlaceholder: 'Dosya adı veya yol girin...',
       gitStatus: 'Git Durumu',
       runBtn: 'Çalıştır',
-      runOnlyPy: 'Sadece açık bir Python dosyası çalıştırılabilir.',
       terminal: 'Terminal',
       terminalShow: 'Terminali Göster',
-      terminalRun: 'Çalıştır',
       aiAgent: 'AI Agent',
-      aiAsk: 'Bir şey sor...',
-      saveStatus: 'Başarıyla kaydedildi',
-      autoSaved: 'Otomatik kaydedildi:',
-      loading: 'Yükleniyor...',
-      working: 'Çalışıyor...',
-      findPlaceholder: 'Bul...',
-      replacePlaceholder: 'Değiştir...',
-      findBtn: 'Bul',
+      aiAsk: 'AI\'ye sorunuzu sorun...',
+      findPlaceholder: 'Aramak istediğiniz metni girin...',
+      replacePlaceholder: 'Değiştirmek istediğiniz metni girin...',
+      findBtn: 'Sonraki',
       replaceBtn: 'Değiştir',
       replaceAllBtn: 'Tümünü Değiştir',
       foundCount: '{n} bulundu',
-      foundNone: 'Eşleşme bulunamadı',
-      findAllTabsBtn: 'Tüm Sekmelerde Bul',
-      foundNoneTabs: 'Hiçbir sekmede eşleşme bulunamadı',
-      replacedCountTabs: '{n} değiştirildi',
-      replacedNoneTabs: 'Hiçbir sekmede değiştirme yapıldı',
-      loginUsername: 'Kullanıcı adı veya e-posta',
+      foundNone: 'Bulunamadı',
+      foundCountTabs: '{n} sekmede bulundu',
+      foundNoneTabs: 'Bulunamadı',
+      replacedCountTabs: '{n} sekmede değiştirildi',
+      replacedNoneTabs: 'Değiştirilmedi',
+      loginUsername: 'Kullanıcı Adı',
       loginPassword: 'Şifre',
       loginBtn: 'Giriş Yap',
-      registerUsername: 'Kullanıcı adı',
+      loginError: 'Kullanıcı adı veya şifre hatalı.',
+      registerUsername: 'Kullanıcı Adı',
       registerEmail: 'E-posta',
       registerPassword: 'Şifre',
       registerFullname: 'Ad Soyad',
       registerBirthdate: 'Doğum Tarihi',
-      registerPasswordConfirm: 'Şifre Tekrarı',
+      registerPasswordConfirm: 'Şifre Tekrar',
       registerBtn: 'Kayıt Ol',
-      loginTab: 'Giriş Yap',
-      registerTab: 'Kayıt Ol',
-      loginError: 'Kullanıcı adı ve şifre gerekli',
-      registerError: 'Tüm alanlar gerekli',
-      passwordMismatch: 'Şifreler eşleşmiyor',
-      userBarLogin: 'Kayıt Ol-Giriş Yap',
-      userBarLogout: 'Çıkış',
+      registerError: 'Kayıt sırasında bir hata oluştu.',
+      registerSuccess: 'Kayıt başarılı, şimdi giriş yapabilirsiniz.',
+      passwordMismatch: 'Şifreler eşleşmiyor.',
+      pricing: {
+        title: 'Fiyatlandırma & Paketler',
+        desc: 'AI ve Sunucu hizmetlerini ayrı veya avantajlı kombin paketlerle kullanabilirsiniz. Ücretsiz temel editör tüm kullanıcılara açıktır.',
+        ai_basic: 'AI Basic',
+        ai_pro: 'AI Pro',
+        ai_unlimited: 'AI Sınırsız',
+        server: 'Sunucu & Terminal',
+        ai_pro_server: 'AI Pro + Sunucu & Terminal',
+        ai_unlimited_server: 'AI Sınırsız + Sunucu & Terminal',
+        price_ai_basic: '5$',
+        price_ai_pro: '15$/ay',
+        price_ai_unlimited: '25$/ay',
+        price_server: '15$/ay',
+        price_ai_pro_server: '25$/ay',
+        price_ai_unlimited_server: '35$/ay',
+        features: {
+          ai_basic: [
+            'AI Agent paneli (kendi API key\'inle)',
+            'Sınırsız AI kullanım (kendi limitle)',
+            'Giriş zorunlu'
+          ],
+          ai_pro: [
+            'AI Agent paneli (sistem API key, 500 istek/ay)',
+            'Giriş zorunlu'
+          ],
+          ai_unlimited: [
+            'AI Agent paneli (sistem API key, sınırsız istek)',
+            'Giriş zorunlu'
+          ],
+          server: [
+            'Sunucu depolama',
+            'Gelişmiş terminal erişimi',
+            'Giriş zorunlu'
+          ],
+          ai_pro_server: [
+            'AI Agent paneli (sistem API key, 500 istek/ay)',
+            'Sunucu depolama',
+            'Gelişmiş terminal erişimi',
+            'Giriş zorunlu'
+          ],
+          ai_unlimited_server: [
+            'AI Agent paneli (sistem API key, sınırsız istek)',
+            'Sunucu depolama',
+            'Gelişmiş terminal erişimi',
+            'Giriş zorunlu'
+          ]
+        },
+        buy: 'Satın Al',
+        note1: 'Ücretli hizmetleri kullanmak için giriş yapmanız gerekmektedir.',
+        note2: 'Paket detayları ve satın alma için yakında online ödeme sistemi eklenecektir.',
+        pricingBtn: 'Üyelik Planları'
+      },
+      pricingBtn: 'Üyelik Planları'
     },
-    de: {
-      save: 'Speichern',
-      dark: 'Dunkel',
-      light: 'Hell',
-      explorer: 'EXPLORER',
-      source: 'QUELLENKONTROLLE',
-      run: 'AUSFÜHREN',
-      extensions: 'ERWEITERUNGEN',
-      uploadDir: 'Verzeichnis hochladen',
-      githubOpen: 'Von GitHub öffnen',
-      searchPlaceholder: 'In diesem Ordner suchen...',
-      back: 'Nach oben',
+    en: {
+      save: 'Save',
+      userBarLogin: 'Register-Login',
+      userBarLogout: 'Logout',
+      dark: 'Dark',
+      light: 'Light',
+      explorer: 'Explorer',
+      source: 'Source Control',
+      run: 'Run & Debug',
+      extensions: 'Extensions',
+      uploadDir: 'Upload Directory',
+      githubOpen: 'Open from GitHub',
+      back: 'Back',
+      searchPlaceholder: 'Enter file name or path...',
       gitStatus: 'Git Status',
-      runBtn: 'Ausführen',
-      runOnlyPy: 'Nur eine Python-Datei kann ausgeführt werden.',
+      runBtn: 'Run',
       terminal: 'Terminal',
-      terminalShow: 'Terminal anzeigen',
-      terminalRun: 'Ausführen',
-      aiAgent: 'KI-Agent',
-      aiAsk: 'Etwas fragen...',
-      saveStatus: 'Erfolgreich gespeichert',
-      autoSaved: 'Automatisch gespeichert:',
-      loading: 'Lädt...',
-      working: 'Wird bearbeitet...',
-      findPlaceholder: 'Suchen...',
-      replacePlaceholder: 'Ersetzen...',
-      findBtn: 'Suchen',
-      replaceBtn: 'Ersetzen',
-      replaceAllBtn: 'Alle ersetzen',
-      foundCount: '{n} gefunden',
-      foundNone: 'Keine Übereinstimmungen gefunden',
-      findAllTabsBtn: 'In allen Registerkarten suchen',
-      foundNoneTabs: 'Keine Übereinstimmungen in irgendeiner Registerkarte gefunden',
-      replacedCountTabs: '{n} ersetzt',
-      replacedNoneTabs: 'In keiner Registerkarte wurde ersetzt',
-      loginUsername: 'Benutzername oder E-Mail',
-      loginPassword: 'Passwort',
-      loginBtn: 'Anmelden',
-      registerUsername: 'Benutzername',
-      registerEmail: 'E-Mail',
-      registerPassword: 'Passwort',
-      registerFullname: 'Vollständiger Name',
-      registerBirthdate: 'Geburtsdatum',
-      registerPasswordConfirm: 'Passwort bestätigen',
-      registerBtn: 'Registrieren',
-      loginTab: 'Anmelden',
-      registerTab: 'Registrieren',
-      loginError: 'Benutzername und Passwort erforderlich',
-      registerError: 'Alle Felder erforderlich',
-      passwordMismatch: 'Passwörter stimmen nicht überein',
-      userBarLogin: 'Registrieren-Anmelden',
-      userBarLogout: 'Abmelden',
+      terminalShow: 'Show Terminal',
+      aiAgent: 'AI Agent',
+      aiAsk: 'Ask AI...',
+      findPlaceholder: 'Enter text to search...',
+      replacePlaceholder: 'Enter text to replace...',
+      findBtn: 'Next',
+      replaceBtn: 'Replace',
+      replaceAllBtn: 'Replace All',
+      foundCount: '{n} found',
+      foundNone: 'Not found',
+      foundCountTabs: '{n} found in tabs',
+      foundNoneTabs: 'Not found',
+      replacedCountTabs: '{n} replaced in tabs',
+      replacedNoneTabs: 'Not replaced',
+      loginUsername: 'Username',
+      loginPassword: 'Password',
+      loginBtn: 'Login',
+      loginError: 'Invalid username or password.',
+      registerUsername: 'Username',
+      registerEmail: 'Email',
+      registerPassword: 'Password',
+      registerFullname: 'Full Name',
+      registerBirthdate: 'Birthdate',
+      registerPasswordConfirm: 'Confirm Password',
+      registerBtn: 'Register',
+      registerError: 'An error occurred during registration.',
+      registerSuccess: 'Registration successful, you can now log in.',
+      passwordMismatch: 'Passwords do not match.',
+      pricing: {
+        title: 'Pricing & Plans',
+        desc: 'You can use AI and Server services separately or with advantageous combo packages. The basic editor is free for everyone.',
+        ai_basic: 'AI Basic',
+        ai_pro: 'AI Pro',
+        ai_unlimited: 'AI Unlimited',
+        server: 'Server & Terminal',
+        ai_pro_server: 'AI Pro + Server & Terminal',
+        ai_unlimited_server: 'AI Unlimited + Server & Terminal',
+        price_ai_basic: '$5',
+        price_ai_pro: '$15/mo',
+        price_ai_unlimited: '$25/mo',
+        price_server: '$15/mo',
+        price_ai_pro_server: '$25/mo',
+        price_ai_unlimited_server: '$35/mo',
+        features: {
+          ai_basic: [
+            'AI Agent panel (with your own API key)',
+            'Unlimited AI usage (with your own limit)',
+            'Login required'
+          ],
+          ai_pro: [
+            'AI Agent panel (system API key, 500 requests/month)',
+            'Login required'
+          ],
+          ai_unlimited: [
+            'AI Agent panel (system API key, unlimited requests)',
+            'Login required'
+          ],
+          server: [
+            'Server storage',
+            'Advanced terminal access',
+            'Login required'
+          ],
+          ai_pro_server: [
+            'AI Agent panel (system API key, 500 requests/month)',
+            'Server storage',
+            'Advanced terminal access',
+            'Login required'
+          ],
+          ai_unlimited_server: [
+            'AI Agent panel (system API key, unlimited requests)',
+            'Server storage',
+            'Advanced terminal access',
+            'Login required'
+          ]
+        },
+        buy: 'Buy',
+        note1: 'You must be logged in to use paid services.',
+        note2: 'Online payment system will be added soon for package details and purchase.',
+        pricingBtn: 'Pricing & Plans'
+      },
+      pricingBtn: 'Pricing & Plans'
     },
     fr: {
+      pricingBtn: 'Tarifs & Forfaits',
       save: 'Enregistrer',
+      userBarLogin: 'Inscription-Connexion',
+      userBarLogout: 'Déconnexion',
       dark: 'Sombre',
       light: 'Clair',
-      explorer: 'EXPLORER',
-      source: 'CONTRÔLE DE SOURCE',
-      run: 'EXÉCUTER',
-      extensions: 'EXTENSIONS',
-      uploadDir: 'Télécharger le dossier',
-      githubOpen: 'Ouvrir depuis GitHub',
-      searchPlaceholder: 'Rechercher dans ce dossier...',
-      back: 'Monter',
-      gitStatus: 'Statut Git',
-      runBtn: 'Exécuter',
-      runOnlyPy: 'Seul un fichier Python peut être exécuté.',
-      terminal: 'Terminal',
-      terminalShow: 'Afficher le terminal',
-      terminalRun: 'Exécuter',
-      aiAgent: 'Agent IA',
-      aiAsk: 'Demander quelque chose...',
-      saveStatus: 'Enregistré avec succès',
-      autoSaved: 'Enregistré automatiquement:',
-      loading: 'Chargement...',
-      working: 'En cours...',
-      findPlaceholder: 'Rechercher...',
-      replacePlaceholder: 'Remplacer...',
-      findBtn: 'Rechercher',
-      replaceBtn: 'Remplacer',
-      replaceAllBtn: 'Tout remplacer',
-      foundCount: '{n} trouvés',
-      foundNone: 'Aucune correspondance trouvée',
-      findAllTabsBtn: 'Rechercher dans toutes les onglets',
-      foundNoneTabs: 'Aucune correspondance trouvée dans aucun onglet',
-      replacedCountTabs: '{n} remplacés',
-      replacedNoneTabs: 'Aucun remplacement effectué dans aucun onglet',
-      loginUsername: "Nom d'utilisateur ou e-mail",
-      loginPassword: 'Mot de passe',
-      loginBtn: 'Connexion',
-      registerUsername: "Nom d'utilisateur",
-      registerEmail: 'E-mail',
-      registerPassword: 'Mot de passe',
-      registerFullname: 'Nom complet',
-      registerBirthdate: 'Date de naissance',
-      registerPasswordConfirm: 'Confirmer le mot de passe',
-      registerBtn: "S'inscrire",
-      loginTab: 'Connexion',
-      registerTab: "S'inscrire",
-      loginError: "Nom d'utilisateur et mot de passe requis",
-      registerError: 'Tous les champs sont requis',
-      passwordMismatch: 'Les mots de passe ne correspondent pas',
-      userBarLogin: "S'inscrire-Connexion",
-      userBarLogout: 'Déconnexion',
+      pricing: {
+        pricingBtn: 'Tarifs & Forfaits',
+        title: 'Tarifs & Forfaits',
+        desc: "Vous pouvez utiliser les services d'IA et de serveur séparément ou avec des forfaits combinés avantageux. L'éditeur de base est gratuit pour tous.",
+        ai_basic: 'IA Basique',
+        ai_pro: 'IA Pro',
+        ai_unlimited: 'IA Illimitée',
+        server: 'Serveur & Terminal',
+        ai_pro_server: 'IA Pro + Serveur & Terminal',
+        ai_unlimited_server: 'IA Illimitée + Serveur & Terminal',
+        price_ai_basic: '5$',
+        price_ai_pro: '15$/mois',
+        price_ai_unlimited: '25$/mois',
+        price_server: '15$/mois',
+        price_ai_pro_server: '25$/mois',
+        price_ai_unlimited_server: '35$/mois',
+        features: {
+          ai_basic: [
+            "Panneau IA (avec votre propre clé API)",
+            "Utilisation illimitée de l'IA (avec votre propre limite)",
+            "Connexion requise"
+          ],
+          ai_pro: [
+            "Panneau IA (clé API système, 500 requêtes/mois)",
+            "Connexion requise"
+          ],
+          ai_unlimited: [
+            "Panneau IA (clé API système, requêtes illimitées)",
+            "Connexion requise"
+          ],
+          server: [
+            "Stockage serveur",
+            "Accès terminal avancé",
+            "Connexion requise"
+          ],
+          ai_pro_server: [
+            "Panneau IA (clé API système, 500 requêtes/mois)",
+            "Stockage serveur",
+            "Accès terminal avancé",
+            "Connexion requise"
+          ],
+          ai_unlimited_server: [
+            "Panneau IA (clé API système, requêtes illimitées)",
+            "Stockage serveur",
+            "Accès terminal avancé",
+            "Connexion requise"
+          ]
+        },
+        buy: 'Acheter',
+        note1: "Vous devez être connecté pour utiliser les services payants.",
+        note2: "Un système de paiement en ligne sera bientôt ajouté pour les détails et l'achat des forfaits."
+      }
+    },
+    de: {
+      pricingBtn: 'Preise & Pläne',
+      save: 'Speichern',
+      userBarLogin: 'Registrieren-Anmelden',
+      userBarLogout: 'Abmelden',
+      dark: 'Dunkel',
+      light: 'Hell',
+      pricing: {
+        pricingBtn: 'Preise & Pläne',
+        title: 'Preise & Pläne',
+        desc: "Sie können KI- und Serverdienste einzeln oder als Vorteilspaket nutzen. Der Basis-Editor ist für alle kostenlos.",
+        ai_basic: 'KI Basic',
+        ai_pro: 'KI Pro',
+        ai_unlimited: 'KI Unbegrenzt',
+        server: 'Server & Terminal',
+        ai_pro_server: 'KI Pro + Server & Terminal',
+        ai_unlimited_server: 'KI Unbegrenzt + Server & Terminal',
+        price_ai_basic: '5$',
+        price_ai_pro: '15€/Monat',
+        price_ai_unlimited: '25€/Monat',
+        price_server: '15€/Monat',
+        price_ai_pro_server: '25€/Monat',
+        price_ai_unlimited_server: '35€/Monat',
+        features: {
+          ai_basic: [
+            "KI-Panel (mit eigenem API-Schlüssel)",
+            "Unbegrenzte KI-Nutzung (mit eigenem Limit)",
+            "Anmeldung erforderlich"
+          ],
+          ai_pro: [
+            "KI-Panel (System-API-Schlüssel, 500 Anfragen/Monat)",
+            "Anmeldung erforderlich"
+          ],
+          ai_unlimited: [
+            "KI-Panel (System-API-Schlüssel, unbegrenzte Anfragen)",
+            "Anmeldung erforderlich"
+          ],
+          server: [
+            "Server-Speicher",
+            "Erweiterter Terminalzugang",
+            "Anmeldung erforderlich"
+          ],
+          ai_pro_server: [
+            "KI-Panel (System-API-Schlüssel, 500 Anfragen/Monat)",
+            "Server-Speicher",
+            "Erweiterter Terminalzugang",
+            "Anmeldung erforderlich"
+          ],
+          ai_unlimited_server: [
+            "KI-Panel (System-API-Schlüssel, unbegrenzte Anfragen)",
+            "Server-Speicher",
+            "Erweiterter Terminalzugang",
+            "Anmeldung erforderlich"
+          ]
+        },
+        buy: 'Kaufen',
+        note1: "Für kostenpflichtige Dienste müssen Sie angemeldet sein.",
+        note2: "Ein Online-Zahlungssystem wird bald für Paketdetails und Käufe hinzugefügt."
+      }
     },
     es: {
+      pricingBtn: 'Precios & Planes',
       save: 'Guardar',
+      userBarLogin: 'Registrar-Iniciar sesión',
+      userBarLogout: 'Cerrar sesión',
       dark: 'Oscuro',
       light: 'Claro',
-      explorer: 'EXPLORER',
-      source: 'CONTROL DE FUENTES',
-      run: 'EJECUTAR',
-      extensions: 'EXTENSIONES',
-      uploadDir: 'Subir directorio',
-      githubOpen: 'Abrir desde GitHub',
-      searchPlaceholder: 'Buscar en esta carpeta...',
-      back: 'Subir',
-      gitStatus: 'Estado de Git',
-      runBtn: 'Ejecutar',
-      runOnlyPy: 'Solo se puede ejecutar un archivo Python.',
-      terminal: 'Terminal',
-      terminalShow: 'Mostrar terminal',
-      terminalRun: 'Ejecutar',
-      aiAgent: 'Agente IA',
-      aiAsk: 'Pregunta algo...',
-      saveStatus: 'Guardado con éxito',
-      autoSaved: 'Guardado automáticamente:',
-      loading: 'Cargando...',
-      working: 'Trabajando...',
-      findPlaceholder: 'Buscar...',
-      replacePlaceholder: 'Reemplazar...',
-      findBtn: 'Buscar',
-      replaceBtn: 'Reemplazar',
-      replaceAllBtn: 'Reemplazar todo',
-      foundCount: '{n} encontrado',
-      foundNone: 'Ninguna coincidencia encontrada',
-      findAllTabsBtn: 'Buscar en todas las pestañas',
-      foundNoneTabs: 'Ninguna coincidencia encontrada en ninguna pestaña',
-      replacedCountTabs: '{n} reemplazado',
-      replacedNoneTabs: 'Ningún reemplazo realizado en ninguna pestaña',
-      loginUsername: 'Usuario o correo',
-      loginPassword: 'Contraseña',
-      loginBtn: 'Iniciar sesión',
-      registerUsername: 'Usuario',
-      registerEmail: 'Correo',
-      registerPassword: 'Contraseña',
-      registerFullname: 'Nombre completo',
-      registerBirthdate: 'Fecha de nacimiento',
-      registerPasswordConfirm: 'Confirmar contraseña',
-      registerBtn: 'Registrarse',
-      loginTab: 'Iniciar sesión',
-      registerTab: 'Registrarse',
-      loginError: 'Usuario y contraseña requeridos',
-      registerError: 'Todos los campos son obligatorios',
-      passwordMismatch: 'Las contraseñas no coinciden',
-      userBarLogin: 'Registrarse-Iniciar sesión',
-      userBarLogout: 'Cerrar sesión',
-    },
-    hi: {
-      save: 'सहेजें',
-      dark: 'डार्क',
-      light: 'लाइट',
-      explorer: 'EXPLORER',
-      source: 'स्रोत नियंत्रण',
-      run: 'चलाएँ',
-      extensions: 'एक्सटेंशन',
-      uploadDir: 'डायरेक्टरी अपलोड करें',
-      githubOpen: 'GitHub से खोलें',
-      searchPlaceholder: 'इस फ़ोल्डर में खोजें...',
-      back: 'ऊपर जाएं',
-      gitStatus: 'Git स्थिति',
-      runBtn: 'चलाएँ',
-      runOnlyPy: 'केवल एक Python फ़ाइल चलाई जा सकती है।',
-      terminal: 'टर्मिनल',
-      terminalShow: 'टर्मिनल दिखाएँ',
-      terminalRun: 'चलाएँ',
-      aiAgent: 'एआई एजेंट',
-      aiAsk: 'कुछ पूछें...',
-      saveStatus: 'सफलतापूर्वक सहेजा गया',
-      autoSaved: 'स्वचालित रूप से सहेजा गया:',
-      loading: 'लोड हो रहा है...',
-      working: 'काम कर रहा है...',
-      findPlaceholder: 'खोजें...',
-      replacePlaceholder: 'बदलें...',
-      findBtn: 'खोजें',
-      replaceBtn: 'बदलें',
-      replaceAllBtn: 'सभी बदलें',
-      foundCount: '{n} खोजें',
-      foundNone: 'कोई मिलान नहीं मिला',
-      findAllTabsBtn: 'सभी टैब्स में खोजें',
-      foundNoneTabs: 'कोई मिलान नहीं मिला किसी भी टैब में',
-      replacedCountTabs: '{n} बदलें',
-      replacedNoneTabs: 'कोई बदलाव नहीं किया गया किसी भी टैब में',
-      loginUsername: 'यूज़रनेम या ईमेल',
-      loginPassword: 'पासवर्ड',
-      loginBtn: 'लॉगिन',
-      registerUsername: 'यूज़रनेम',
-      registerEmail: 'ईमेल',
-      registerPassword: 'पासवर्ड',
-      registerFullname: 'पूरा नाम',
-      registerBirthdate: 'जन्म तिथि',
-      registerPasswordConfirm: 'पासवर्ड की पुष्टि करें',
-      registerBtn: 'रजिस्टर',
-      loginTab: 'लॉगिन',
-      registerTab: 'रजिस्टर',
-      loginError: 'यूज़रनेम और पासवर्ड आवश्यक',
-      registerError: 'सभी फ़ील्ड आवश्यक हैं',
-      passwordMismatch: 'पासवर्ड मेल नहीं खाते',
-      userBarLogin: 'रजिस्टर-लॉगिन',
-      userBarLogout: 'लॉगआउट',
+      pricing: {
+        pricingBtn: 'Precios & Planes',
+        title: 'Precios & Planes',
+        desc: "Puede utilizar los servicios de IA y servidor por separado o con paquetes combinados ventajosos. El editor básico es gratuito para todos.",
+        ai_basic: 'IA Básica',
+        ai_pro: 'IA Pro',
+        ai_unlimited: 'IA Ilimitada',
+        server: 'Servidor & Terminal',
+        ai_pro_server: 'IA Pro + Servidor & Terminal',
+        ai_unlimited_server: 'IA Ilimitada + Servidor & Terminal',
+        price_ai_basic: '5$',
+        price_ai_pro: '15$/mes',
+        price_ai_unlimited: '25$/mes',
+        price_server: '15$/mes',
+        price_ai_pro_server: '25$/mes',
+        price_ai_unlimited_server: '35$/mes',
+        features: {
+          ai_basic: [
+            "Panel de IA (con tu propia clave API)",
+            "Uso ilimitado de IA (con tu propio límite)",
+            "Inicio de sesión requerido"
+          ],
+          ai_pro: [
+            "Panel de IA (clave API del sistema, 500 solicitudes/mes)",
+            "Inicio de sesión requerido"
+          ],
+          ai_unlimited: [
+            "Panel de IA (clave API del sistema, solicitudes ilimitadas)",
+            "Inicio de sesión requerido"
+          ],
+          server: [
+            "Almacenamiento en servidor",
+            "Acceso avanzado al terminal",
+            "Inicio de sesión requerido"
+          ],
+          ai_pro_server: [
+            "Panel de IA (clave API del sistema, 500 solicitudes/mes)",
+            "Almacenamiento en servidor",
+            "Acceso avanzado al terminal",
+            "Inicio de sesión requerido"
+          ],
+          ai_unlimited_server: [
+            "Panel de IA (clave API del sistema, solicitudes ilimitadas)",
+            "Almacenamiento en servidor",
+            "Acceso avanzado al terminal",
+            "Inicio de sesión requerido"
+          ]
+        },
+        buy: 'Comprar',
+        note1: "Debe iniciar sesión para utilizar los servicios de pago.",
+        note2: "Pronto se añadirá un sistema de pago en línea para detalles y compras de paquetes."
+      }
     },
     zh: {
+      pricingBtn: '定价与套餐',
       save: '保存',
+      userBarLogin: '注册-登录',
+      userBarLogout: '登出',
       dark: '深色',
       light: '浅色',
-      explorer: 'EXPLORER',
-      source: '源代码管理',
-      run: '运行',
-      extensions: '扩展',
-      uploadDir: '上传目录',
-      githubOpen: '从GitHub打开',
-      searchPlaceholder: '在此文件夹中搜索...',
-      back: '上一级',
-      gitStatus: 'Git状态',
-      runBtn: '运行',
-      runOnlyPy: '只能运行一个Python文件。',
-      terminal: '终端',
-      terminalShow: '显示终端',
-      terminalRun: '运行',
-      aiAgent: 'AI助手',
-      aiAsk: '问点什么...',
-      saveStatus: '保存成功',
-      autoSaved: '自动保存:',
-      loading: '加载中...',
-      working: '工作中...',
-      findPlaceholder: '查找...',
-      replacePlaceholder: '替换...',
-      findBtn: '查找',
-      replaceBtn: '替换',
-      replaceAllBtn: '全部替换',
-      foundCount: '{n} 找到',
-      foundNone: '未找到匹配项',
-      findAllTabsBtn: '在所有标签页中查找',
-      foundNoneTabs: '未找到任何标签页中的匹配项',
-      replacedCountTabs: '{n} 替换',
-      replacedNoneTabs: '未在任何标签页中进行替换',
-      loginUsername: '用户名或邮箱',
-      loginPassword: '密码',
-      loginBtn: '登录',
-      registerUsername: '用户名',
-      registerEmail: '邮箱',
-      registerPassword: '密码',
-      registerFullname: '姓名',
-      registerBirthdate: '出生日期',
-      registerPasswordConfirm: '确认密码',
-      registerBtn: '注册',
-      loginTab: '登录',
-      registerTab: '注册',
-      loginError: '用户名和密码必填',
-      registerError: '所有字段必填',
-      passwordMismatch: '密码不匹配',
-      userBarLogin: '注册-登录',
-      userBarLogout: '退出',
+      pricing: {
+        pricingBtn: '定价与套餐',
+        title: '定价与套餐',
+        desc: "您可以单独或通过优惠组合套餐使用AI和服务器服务。基础编辑器对所有人免费开放。",
+        ai_basic: 'AI基础',
+        ai_pro: 'AI专业',
+        ai_unlimited: 'AI无限',
+        server: '服务器与终端',
+        ai_pro_server: 'AI专业+服务器与终端',
+        ai_unlimited_server: 'AI无限+服务器与终端',
+        price_ai_basic: '5$',
+        price_ai_pro: '15$/月',
+        price_ai_unlimited: '25$/月',
+        price_server: '15$/月',
+        price_ai_pro_server: '25$/月',
+        price_ai_unlimited_server: '35$/月',
+        features: {
+          ai_basic: [
+            "AI面板（使用您自己的API密钥）",
+            "无限AI使用（受您自己的限制）",
+            "需要登录"
+          ],
+          ai_pro: [
+            "AI面板（系统API密钥，每月500次请求）",
+            "需要登录"
+          ],
+          ai_unlimited: [
+            "AI面板（系统API密钥，无限请求）",
+            "需要登录"
+          ],
+          server: [
+            "服务器存储",
+            "高级终端访问",
+            "需要登录"
+          ],
+          ai_pro_server: [
+            "AI面板（系统API密钥，每月500次请求）",
+            "服务器存储",
+            "高级终端访问",
+            "需要登录"
+          ],
+          ai_unlimited_server: [
+            "AI面板（系统API密钥，无限请求）",
+            "服务器存储",
+            "高级终端访问",
+            "需要登录"
+          ]
+        },
+        buy: '购买',
+        note1: "您必须登录才能使用付费服务。",
+        note2: "即将添加在线支付系统以获取套餐详情和购买。"
+      }
+    },
+    hi: {
+      pricingBtn: 'मूल्य निर्धारण और योजनाएँ',
+      save: 'सहेजें',
+      userBarLogin: 'रजिस्टर-लॉगिन',
+      userBarLogout: 'लॉगआउट',
+      dark: 'गहरा',
+      light: 'हल्का',
+      pricing: {
+        pricingBtn: 'मूल्य निर्धारण और योजनाएँ',
+        title: 'मूल्य निर्धारण और योजनाएँ',
+        desc: "आप AI और सर्वर सेवाओं का उपयोग अलग-अलग या लाभकारी संयोजन पैकेजों के साथ कर सकते हैं। बेसिक एडिटर सभी के लिए निःशुल्क है।",
+        ai_basic: 'AI बेसिक',
+        ai_pro: 'AI प्रो',
+        ai_unlimited: 'AI अनलिमिटेड',
+        server: 'सर्वर और टर्मिनल',
+        ai_pro_server: 'AI प्रो + सर्वर और टर्मिनल',
+        ai_unlimited_server: 'AI अनलिमिटेड + सर्वर और टर्मिनल',
+        price_ai_basic: '5$',
+        price_ai_pro: '15$/माह',
+        price_ai_unlimited: '25$/माह',
+        price_server: '15$/माह',
+        price_ai_pro_server: '25$/माह',
+        price_ai_unlimited_server: '35$/माह',
+        features: {
+          ai_basic: [
+            "AI पैनल (अपने स्वयं के API कुंजी के साथ)",
+            "असीमित AI उपयोग (अपने स्वयं के लिमिट के साथ)",
+            "लॉगिन आवश्यक"
+          ],
+          ai_pro: [
+            "AI पैनल (सिस्टम API कुंजी, 500 अनुरोध/माह)",
+            "लॉगिन आवश्यक"
+          ],
+          ai_unlimited: [
+            "AI पैनल (सिस्टम API कुंजी, असीमित अनुरोध)",
+            "लॉगिन आवश्यक"
+          ],
+          server: [
+            "सर्वर स्टोरेज",
+            "एडवांस्ड टर्मिनल एक्सेस",
+            "लॉगिन आवश्यक"
+          ],
+          ai_pro_server: [
+            "AI पैनल (सिस्टम API कुंजी, 500 अनुरोध/माह)",
+            "सर्वर स्टोरेज",
+            "एडवांस्ड टर्मिनल एक्सेस",
+            "लॉगिन आवश्यक"
+          ],
+          ai_unlimited_server: [
+            "AI पैनल (सिस्टम API कुंजी, असीमित अनुरोध)",
+            "सर्वर स्टोरेज",
+            "एडवांस्ड टर्मिनल एक्सेस",
+            "लॉगिन आवश्यक"
+          ]
+        },
+        buy: 'खरीदें',
+        note1: "पेड सेवाओं का उपयोग करने के लिए आपको लॉगिन करना होगा।",
+        note2: "पैकेज विवरण और खरीद के लिए जल्द ही ऑनलाइन भुगतान प्रणाली जोड़ी जाएगी।"
+      }
     }
   };
   window.translations = translations;
 
+  function updatePricingModalLang(lang) {
+    // DÜZELTME: Çeviri nesnesini doğru al
+    const t = (translations[lang] && translations[lang].pricing) ? translations[lang].pricing : (translations['en'] && translations['en'].pricing) ? translations['en'].pricing : {};
+    const modal = document.getElementById('pricing-modal');
+    if (!modal) return;
+    // Başlık ve açıklama
+    const title = modal.querySelector('.pricing-title');
+    if (title) title.innerHTML = `<i class="fa-solid fa-cubes"></i> ${t.title}`;
+    const desc = modal.querySelector('.pricing-desc');
+    if (desc) desc.textContent = t.desc;
+    // Kartlar
+    const cardKeys = ['ai_basic','ai_pro','ai_unlimited','server','ai_pro_server','ai_unlimited_server'];
+    const priceKeys = ['price_ai_basic','price_ai_pro','price_ai_unlimited','price_server','price_ai_pro_server','price_ai_unlimited_server'];
+    const cards = modal.querySelectorAll('.pricing-card');
+    cards.forEach((card, i) => {
+      const planTitle = card.querySelector('.plan-title');
+      if (planTitle) planTitle.textContent = t[cardKeys[i]];
+      const planPrice = card.querySelector('.plan-price');
+      if (planPrice) planPrice.textContent = t[priceKeys[i]];
+      const ul = card.querySelector('ul');
+      if (ul) {
+        ul.innerHTML = '';
+        const features = t.features && t.features[cardKeys[i]];
+        if (features && Array.isArray(features)) {
+          features.forEach(f => {
+            ul.innerHTML += `<li><i class='fa-solid fa-check'></i> ${f}</li>`;
+          });
+        }
+      }
+      const btn = card.querySelector('.plan-action button');
+      if (btn) btn.textContent = t.buy;
+    });
+    // Notlar
+    const notes = modal.querySelectorAll('.note');
+    if (notes && notes[0]) {
+      notes[0].innerHTML = `<i class="fa-solid fa-info-circle"></i> ${t.note1}<br><i class="fa-solid fa-info-circle"></i> ${t.note2}`;
+    }
+  }
+
+  // setLanguage fonksiyonuna ekle
   function setLanguage(lang) {
     localStorage.setItem('lang', lang);
     currentLang = lang;
-    const t = translations[lang] || translations['en'];
+    const t = (translations[lang] && typeof translations[lang] === 'object') ? translations[lang] : translations['en'];
     // Header
     if (saveBtn) saveBtn.innerHTML = `<i class="fa-regular fa-floppy-disk"></i> ${t.save}`;
     if (themeToggle) {
@@ -1275,6 +1442,8 @@ window.addEventListener('DOMContentLoaded', function() {
       if (registerBtn) registerBtn.textContent = t.registerBtn;
       if (authLoginTab) authLoginTab.textContent = t.loginTab;
     if (authRegisterTab) authRegisterTab.textContent = t.registerTab;
+    // Pricing modalı da güncelle
+    updatePricingModalLang(lang);
   }
 
   // Dil seçici ve otomatik uygulama
@@ -1502,6 +1671,13 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Modal aç/kapa fonksiyonları
   function openAuthModal(tab = 'login') {
+    const authModal = document.getElementById('auth-modal');
+    const authLoginTab = document.getElementById('auth-login-tab');
+    const authRegisterTab = document.getElementById('auth-register-tab');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const loginError = document.getElementById('login-error');
+    const registerError = document.getElementById('register-error');
     if (authModal) authModal.style.display = 'flex';
     // Sekme aktifliğini ve stilleri güncelle
     if (authLoginTab) authLoginTab.classList.remove('active');
@@ -1518,10 +1694,17 @@ window.addEventListener('DOMContentLoaded', function() {
     if (loginError) loginError.textContent = '';
     if (registerError) registerError.textContent = '';
   }
+  window.openAuthModal = openAuthModal;
   function closeAuthModal() {
+    console.log('closeAuthModal çağrıldı');
     if (authModal) authModal.style.display = 'none';
   }
-  if (authModalClose) authModalClose.onclick = closeAuthModal;
+  if (authModalClose) {
+    authModalClose.onclick = function() {
+      console.log('çarpı tıklandı');
+      closeAuthModal();
+    };
+  }
   if (authLoginTab) authLoginTab.onclick = () => {
     openAuthModal('login');
     if (authLoginTab) authLoginTab.classList.add('active');
@@ -1646,62 +1829,48 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Kullanıcı durumu kontrolü ve üstte gösterme
   function checkUserStatus() {
-    // En güncel çeviri anahtarını al
-    const t = window.translations && window.translations[currentLang] ? window.translations[currentLang] : window.translations['en'];
-    // Header ve kaydet butonunu bul
-    const vsHeader = document.getElementById('vs-header');
-    const saveBtn = document.getElementById('save-btn');
+    console.log('checkUserStatus çağrıldı');
     let userBar = document.getElementById('user-bar');
-    // user-bar yoksa oluştur ve header'a ekle
-    if (!userBar) {
-      userBar = document.createElement('div');
-      userBar.id = 'user-bar';
-      userBar.style.background = 'var(--vscode-accent)';
-      userBar.style.color = '#fff';
-      userBar.style.padding = '6px 16px';
-      userBar.style.borderRadius = '20px';
-      userBar.style.fontSize = '1em';
-      userBar.style.display = 'flex';
-      userBar.style.alignItems = 'center';
-      userBar.style.gap = '10px';
-      userBar.style.marginLeft = '16px';
-      userBar.style.position = 'static';
-      if (saveBtn && vsHeader) {
-        vsHeader.insertBefore(userBar, saveBtn);
-      } else if (vsHeader) {
-        vsHeader.appendChild(userBar);
-      } else {
-        document.body.appendChild(userBar);
-      }
-    }
-    // Her durumda içeriği temizle
+    if (!userBar) return;
     userBar.innerHTML = '';
-    // Kullanıcı durumunu API'den al
+    // Üyelik Planları butonu
+    const planLink = document.createElement('a');
+    planLink.href = '/pricing';
+    planLink.id = 'pricing-link';
+    planLink.innerHTML = `<i class='fa-solid fa-crown'></i> ${window.translations[currentLang]?.pricingBtn || window.translations[currentLang]?.pricing?.pricingBtn || 'Üyelik Planları'}`;
+    planLink.style.background = '#fff';
+    planLink.style.color = 'var(--vscode-accent)';
+    planLink.style.border = 'none';
+    planLink.style.borderRadius = '12px';
+    planLink.style.padding = '4px 16px';
+    planLink.style.minWidth = '110px';
+    planLink.style.cursor = 'pointer';
+    planLink.style.fontSize = '0.95em';
+    planLink.style.textDecoration = 'none';
+    planLink.style.marginRight = '8px';
+    planLink.onclick = function(e) {
+      e.preventDefault();
+      const modal = document.getElementById('pricing-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        if (typeof updatePricingModalLang === 'function') updatePricingModalLang(currentLang);
+      } else {
+        window.location.href = '/pricing';
+      }
+    };
+    userBar.appendChild(planLink);
     fetch('/api/user')
       .then(r => r.json())
       .then(data => {
-        userBar.innerHTML = '';
-        // Üyelik Planları linki
-        const planLink = document.createElement('a');
-        planLink.href = '/pricing';
-        planLink.id = 'pricing-link';
-        planLink.innerHTML = "<i class='fa-solid fa-crown'></i> Üyelik Planları";
-        planLink.style.background = '#fff';
-        planLink.style.color = 'var(--vscode-accent)';
-        planLink.style.border = 'none';
-        planLink.style.borderRadius = '12px';
-        planLink.style.padding = '4px 16px';
-        planLink.style.minWidth = '110px';
-        planLink.style.cursor = 'pointer';
-        planLink.style.fontSize = '0.95em';
-        planLink.style.textDecoration = 'none';
-        planLink.style.marginRight = '8px';
-        userBar.appendChild(planLink);
         if (data.logged_in) {
-          userBar.innerHTML += `<i class='fa-solid fa-user'></i> <span style='margin-right:8px;'>${data.username}</span>`;
+          // Kullanıcı adı ve çıkış butonu
+          const userSpan = document.createElement('span');
+          userSpan.innerHTML = `<i class='fa-solid fa-user'></i> <span style='margin-right:8px;'>${data.username}</span>`;
+          userBar.appendChild(userSpan);
+
           const logoutBtn = document.createElement('button');
           logoutBtn.id = 'logout-btn';
-          logoutBtn.textContent = t.userBarLogout;
+          logoutBtn.textContent = window.translations[currentLang]?.userBarLogout || 'Çıkış';
           logoutBtn.style.background = '#fff';
           logoutBtn.style.color = 'var(--vscode-accent)';
           logoutBtn.style.border = 'none';
@@ -1710,7 +1879,6 @@ window.addEventListener('DOMContentLoaded', function() {
           logoutBtn.style.minWidth = '70px';
           logoutBtn.style.cursor = 'pointer';
           logoutBtn.style.fontSize = '0.95em';
-          userBar.appendChild(logoutBtn);
           logoutBtn.onclick = function() {
             fetch('/api/logout', { method: 'POST' })
               .then(r => r.json())
@@ -1718,10 +1886,12 @@ window.addEventListener('DOMContentLoaded', function() {
                 checkUserStatus();
               });
           };
+          userBar.appendChild(logoutBtn);
         } else {
+          // Giriş yap butonu
           const openAuthBtn = document.createElement('button');
           openAuthBtn.id = 'open-auth-btn';
-          openAuthBtn.innerHTML = `<i class='fa-solid fa-user'></i> ${t.userBarLogin}`;
+          openAuthBtn.innerHTML = `<i class='fa-solid fa-user'></i> ${window.translations[currentLang]?.userBarLogin || 'Kayıt Ol-Giriş Yap'}`;
           openAuthBtn.style.background = '#fff';
           openAuthBtn.style.color = 'var(--vscode-accent)';
           openAuthBtn.style.border = 'none';
@@ -1730,12 +1900,15 @@ window.addEventListener('DOMContentLoaded', function() {
           openAuthBtn.style.minWidth = '110px';
           openAuthBtn.style.cursor = 'pointer';
           openAuthBtn.style.fontSize = '0.95em';
+          openAuthBtn.onclick = function(e) {
+            e.preventDefault();
+            if (typeof openAuthModal === 'function') openAuthModal('login');
+          };
           userBar.appendChild(openAuthBtn);
-          openAuthBtn.onclick = () => openAuthModal('login');
         }
+        console.log('checkUserStatus bitti');
       });
   }
-  checkUserStatus();
 
   // Sosyal giriş butonları
   const googleLoginBtn = document.getElementById('google-login-btn');
@@ -1784,4 +1957,68 @@ window.addEventListener('DOMContentLoaded', function() {
       }
     });
 
+  // Üyelik Planları modal aç/kapa
+  var planLink = document.getElementById('pricing-link');
+  const pricingModal = document.getElementById('pricing-modal');
+  const pricingModalClose = document.getElementById('pricing-modal-close');
+  if (planLink && pricingModal && pricingModalClose) {
+    planLink.onclick = function(e) {
+      e.preventDefault();
+      pricingModal.style.display = 'flex';
+    };
+    pricingModalClose.onclick = function() {
+      pricingModal.style.display = 'none';
+    };
+    pricingModal.addEventListener('click', function(e) {
+      if (e.target === pricingModal) pricingModal.style.display = 'none';
+    });
+  }
+
+  // Modal açıldığında da güncel dilde göster
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function() {
+      const planLink = document.getElementById('pricing-link');
+      if (planLink) {
+        planLink.addEventListener('click', function() {
+          updatePricingModalLang(currentLang);
+        });
+      }
+    });
+  }
+
+  // Giriş yap butonuna event bağla
+  const openAuthBtn = document.getElementById('open-auth-btn');
+  if (openAuthBtn) {
+    openAuthBtn.onclick = function(e) {
+      e.preventDefault();
+      if (typeof openAuthModal === 'function') openAuthModal('login');
+    };
+  }
+
+  // Üyelik Planları butonuna modal açma eventini bağla
+  var planLink = document.getElementById('pricing-link');
+  if (planLink) {
+    planLink.onclick = function(e) {
+      e.preventDefault();
+      const modal = document.getElementById('pricing-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        if (typeof updatePricingModalLang === 'function') updatePricingModalLang(currentLang);
+      } else {
+        window.location.href = '/pricing';
+      }
+    };
+  }
+
+  // Ücretler modalı çarpı ve arka plan kapatma
+  const modal = document.getElementById('pricing-modal');
+  const modalClose = document.getElementById('pricing-modal-close');
+  if (modal && modalClose) {
+    modalClose.onclick = function() {
+      modal.style.display = 'none';
+    };
+    modal.onclick = function(e) {
+      if (e.target === modal) modal.style.display = 'none';
+    };
+  }
 }); 
