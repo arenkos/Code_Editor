@@ -995,6 +995,32 @@ window.addEventListener('DOMContentLoaded', function() {
       userBarLogout: 'Déconnexion',
       dark: 'Sombre',
       light: 'Clair',
+      explorer: 'Explorateur',
+      source: 'Contrôle de source',
+      run: 'Exécuter & Déboguer',
+      extensions: 'Extensions',
+      uploadDir: 'Télécharger un dossier',
+      githubOpen: 'Ouvrir depuis GitHub',
+      back: 'Retour',
+      searchPlaceholder: 'Entrez le nom ou le chemin du fichier...',
+      gitStatus: 'Statut Git',
+      runBtn: 'Exécuter',
+      terminal: 'Terminal',
+      terminalShow: 'Afficher le terminal',
+      findPlaceholder: 'Entrez le texte à rechercher...',
+      replacePlaceholder: 'Entrez le texte à remplacer...',
+      findBtn: 'Suivant',
+      replaceBtn: 'Remplacer',
+      replaceAllBtn: 'Tout remplacer',
+      foundCount: '{n} trouvé(s)',
+      foundNone: 'Aucun trouvé',
+      foundCountTabs: '{n} trouvé(s) dans les onglets',
+      foundNoneTabs: 'Aucun trouvé',
+      replacedCountTabs: '{n} remplacé(s) dans les onglets',
+      replacedNoneTabs: 'Aucun remplacé',
+      terminalRun: 'Exécuter la commande',
+      terminalHeader: 'Terminal',
+      terminalShow: 'Afficher le terminal',
       pricing: {
         pricingBtn: 'Tarifs & Forfaits',
         title: 'Tarifs & Forfaits',
@@ -1045,7 +1071,9 @@ window.addEventListener('DOMContentLoaded', function() {
         },
         buy: 'Acheter',
         note1: "Vous devez être connecté pour utiliser les services payants.",
-        note2: "Un système de paiement en ligne sera bientôt ajouté pour les détails et l'achat des forfaits."
+        note2: "Un système de paiement en ligne sera bientôt ajouté pour les détails et l'achat des forfaits.",
+        findAllTabsBtn: 'Tout rechercher dans les onglets',
+        replaceAllTabsBtn: 'Tout remplacer dans les onglets'
       }
     },
     de: {
@@ -1055,6 +1083,32 @@ window.addEventListener('DOMContentLoaded', function() {
       userBarLogout: 'Abmelden',
       dark: 'Dunkel',
       light: 'Hell',
+      explorer: 'Explorer',
+      source: 'Quellcodeverwaltung',
+      run: 'Ausführen & Debuggen',
+      extensions: 'Erweiterungen',
+      uploadDir: 'Verzeichnis hochladen',
+      githubOpen: 'Von GitHub öffnen',
+      back: 'Zurück',
+      searchPlaceholder: 'Dateiname oder Pfad eingeben...',
+      gitStatus: 'Git-Status',
+      runBtn: 'Ausführen',
+      terminal: 'Terminal',
+      terminalShow: 'Terminal anzeigen',
+      findPlaceholder: 'Zu suchenden Text eingeben...',
+      replacePlaceholder: 'Zu ersetzenden Text eingeben...',
+      findBtn: 'Weiter',
+      replaceBtn: 'Ersetzen',
+      replaceAllBtn: 'Alle ersetzen',
+      foundCount: '{n} gefunden',
+      foundNone: 'Nicht gefunden',
+      foundCountTabs: '{n} in Tabs gefunden',
+      foundNoneTabs: 'Nicht gefunden',
+      replacedCountTabs: '{n} in Tabs ersetzt',
+      replacedNoneTabs: 'Nicht ersetzt',
+      terminalRun: 'Befehl ausführen',
+      terminalHeader: 'Terminal',
+      terminalShow: 'Terminal anzeigen',
       pricing: {
         pricingBtn: 'Preise & Pläne',
         title: 'Preise & Pläne',
@@ -1105,7 +1159,9 @@ window.addEventListener('DOMContentLoaded', function() {
         },
         buy: 'Kaufen',
         note1: "Für kostenpflichtige Dienste müssen Sie angemeldet sein.",
-        note2: "Ein Online-Zahlungssystem wird bald für Paketdetails und Käufe hinzugefügt."
+        note2: "Ein Online-Zahlungssystem wird bald für Paketdetails und Käufe hinzugefügt.",
+        findAllTabsBtn: 'In allen Tabs suchen',
+        replaceAllTabsBtn: 'In allen Tabs ersetzen'
       }
     },
     es: {
@@ -1115,6 +1171,32 @@ window.addEventListener('DOMContentLoaded', function() {
       userBarLogout: 'Cerrar sesión',
       dark: 'Oscuro',
       light: 'Claro',
+      explorer: 'Explorador',
+      source: 'Control de código',
+      run: 'Ejecutar y depurar',
+      extensions: 'Extensiones',
+      uploadDir: 'Subir directorio',
+      githubOpen: 'Abrir desde GitHub',
+      back: 'Atrás',
+      searchPlaceholder: 'Ingrese el nombre o ruta del archivo...',
+      gitStatus: 'Estado de Git',
+      runBtn: 'Ejecutar',
+      terminal: 'Terminal',
+      terminalShow: 'Mostrar terminal',
+      findPlaceholder: 'Ingrese el texto a buscar...',
+      replacePlaceholder: 'Ingrese el texto a reemplazar...',
+      findBtn: 'Siguiente',
+      replaceBtn: 'Reemplazar',
+      replaceAllBtn: 'Reemplazar todo',
+      foundCount: '{n} encontrado(s)',
+      foundNone: 'No encontrado',
+      foundCountTabs: '{n} encontrado(s) en pestañas',
+      foundNoneTabs: 'No encontrado',
+      replacedCountTabs: '{n} reemplazado(s) en pestañas',
+      replacedNoneTabs: 'No reemplazado',
+      terminalRun: 'Ejecutar comando',
+      terminalHeader: 'Terminal',
+      terminalShow: 'Mostrar terminal',
       pricing: {
         pricingBtn: 'Precios & Planes',
         title: 'Precios & Planes',
@@ -1165,7 +1247,9 @@ window.addEventListener('DOMContentLoaded', function() {
         },
         buy: 'Comprar',
         note1: "Debe iniciar sesión para utilizar los servicios de pago.",
-        note2: "Pronto se añadirá un sistema de pago en línea para detalles y compras de paquetes."
+        note2: "Pronto se añadirá un sistema de pago en línea para detalles y compras de paquetes.",
+        findAllTabsBtn: 'Buscar en todas las pestañas',
+        replaceAllTabsBtn: 'Reemplazar en todas las pestañas'
       }
     },
     zh: {
@@ -1175,6 +1259,32 @@ window.addEventListener('DOMContentLoaded', function() {
       userBarLogout: '登出',
       dark: '深色',
       light: '浅色',
+      explorer: '资源管理器',
+      source: '源代码管理',
+      run: '运行和调试',
+      extensions: '扩展',
+      uploadDir: '上传目录',
+      githubOpen: '从GitHub打开',
+      back: '返回',
+      searchPlaceholder: '输入文件名或路径...',
+      gitStatus: 'Git状态',
+      runBtn: '运行',
+      terminal: '终端',
+      terminalShow: '显示终端',
+      findPlaceholder: '输入要搜索的文本...',
+      replacePlaceholder: '输入要替换的文本...',
+      findBtn: '下一个',
+      replaceBtn: '替换',
+      replaceAllBtn: '全部替换',
+      foundCount: '找到{n}个',
+      foundNone: '未找到',
+      foundCountTabs: '在标签中找到{n}个',
+      foundNoneTabs: '未找到',
+      replacedCountTabs: '在标签中替换了{n}个',
+      replacedNoneTabs: '未替换',
+      terminalRun: '运行命令',
+      terminalHeader: '终端',
+      terminalShow: '显示终端',
       pricing: {
         pricingBtn: '定价与套餐',
         title: '定价与套餐',
@@ -1225,7 +1335,9 @@ window.addEventListener('DOMContentLoaded', function() {
         },
         buy: '购买',
         note1: "您必须登录才能使用付费服务。",
-        note2: "即将添加在线支付系统以获取套餐详情和购买。"
+        note2: "即将添加在线支付系统以获取套餐详情和购买。",
+        findAllTabsBtn: '在所有标签中查找',
+        replaceAllTabsBtn: '在所有标签中替换'
       }
     },
     hi: {
@@ -1235,6 +1347,32 @@ window.addEventListener('DOMContentLoaded', function() {
       userBarLogout: 'लॉगआउट',
       dark: 'गहरा',
       light: 'हल्का',
+      explorer: 'एक्सप्लोरर',
+      source: 'सोर्स कंट्रोल',
+      run: 'चलाएँ और डिबग करें',
+      extensions: 'एक्सटेंशन',
+      uploadDir: 'डायरेक्टरी अपलोड करें',
+      githubOpen: 'GitHub से खोलें',
+      back: 'वापस',
+      searchPlaceholder: 'फ़ाइल नाम या पथ दर्ज करें...',
+      gitStatus: 'Git स्थिति',
+      runBtn: 'चलाएँ',
+      terminal: 'टर्मिनल',
+      terminalShow: 'टर्मिनल दिखाएँ',
+      findPlaceholder: 'खोजने के लिए पाठ दर्ज करें...',
+      replacePlaceholder: 'बदलने के लिए पाठ दर्ज करें...',
+      findBtn: 'अगला',
+      replaceBtn: 'बदलें',
+      replaceAllBtn: 'सभी बदलें',
+      foundCount: '{n} मिला',
+      foundNone: 'कुछ नहीं मिला',
+      foundCountTabs: '{n} टैब में मिला',
+      foundNoneTabs: 'कुछ नहीं मिला',
+      replacedCountTabs: '{n} टैब में बदला गया',
+      replacedNoneTabs: 'कोई बदलाव नहीं',
+      terminalRun: 'कमांड चलाएँ',
+      terminalHeader: 'टर्मिनल',
+      terminalShow: 'टर्मिनल दिखाएँ',
       pricing: {
         pricingBtn: 'मूल्य निर्धारण और योजनाएँ',
         title: 'मूल्य निर्धारण और योजनाएँ',
@@ -1285,7 +1423,9 @@ window.addEventListener('DOMContentLoaded', function() {
         },
         buy: 'खरीदें',
         note1: "पेड सेवाओं का उपयोग करने के लिए आपको लॉगिन करना होगा।",
-        note2: "पैकेज विवरण और खरीद के लिए जल्द ही ऑनलाइन भुगतान प्रणाली जोड़ी जाएगी।"
+        note2: "पैकेज विवरण और खरीद के लिए जल्द ही ऑनलाइन भुगतान प्रणाली जोड़ी जाएगी।",
+        findAllTabsBtn: 'सभी टैब में खोजें',
+        replaceAllTabsBtn: 'सभी टैब में बदलें'
       }
     }
   };
@@ -1412,6 +1552,12 @@ window.addEventListener('DOMContentLoaded', function() {
     if (findNextBtn) findNextBtn.textContent = t.findBtn;
     if (replaceBtn) replaceBtn.textContent = t.replaceBtn;
     if (replaceAllBtn) replaceAllBtn.textContent = t.replaceAllBtn;
+    
+    // Tüm sekmelerde bul/değiştir butonları
+    const findAllTabsBtn = document.getElementById('find-all-tabs-btn');
+    const replaceAllTabsBtn = document.getElementById('replace-all-tabs-btn');
+    if (findAllTabsBtn) findAllTabsBtn.textContent = t.findAllTabsBtn;
+    if (replaceAllTabsBtn) replaceAllTabsBtn.textContent = t.replaceAllTabsBtn;
     
     attachActivityBtnHandlers();
     // Kullanıcı barı çevirileri (varsa)
@@ -1806,8 +1952,16 @@ window.addEventListener('DOMContentLoaded', function() {
   }
   // Sekme değişiminde hata mesajlarını gizle
   function hideAuthErrors() {
-    if (loginError) { loginError.textContent = ''; loginError.classList.remove('has-error'); loginError.style.display = 'none'; }
-    if (registerError) { registerError.textContent = ''; registerError.classList.remove('has-error'); registerError.style.display = 'none'; }
+    if (loginError) {
+      loginError.textContent = '';
+      loginError.classList.remove('has-error');
+      loginError.style.display = 'none';
+    }
+    if (registerError) {
+      registerError.textContent = '';
+      registerError.classList.remove('has-error');
+      registerError.style.display = 'none';
+    }
   }
   if (authLoginTab) authLoginTab.addEventListener('click', hideAuthErrors);
   if (authRegisterTab) authRegisterTab.addEventListener('click', hideAuthErrors);
